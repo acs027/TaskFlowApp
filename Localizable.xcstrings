@@ -1,0 +1,112 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "%@ : %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ : %2$@"
+          }
+        }
+      }
+    },
+    "%lld" : {
+
+    },
+    "+ Create a task" : {
+
+    },
+    "Add a task" : {
+
+    },
+    "Additional Infos" : {
+
+    },
+    "Assigned person/team*" : {
+
+    },
+    "Audio note attached" : {
+
+    },
+    "Category" : {
+
+    },
+    "Control" : {
+
+    },
+    "Control List" : {
+
+    },
+    "Create a Task" : {
+
+    },
+    "Dashboard" : {
+
+    },
+    "Deadline" : {
+
+    },
+    "Deadline*" : {
+
+    },
+    "Description" : {
+
+    },
+    "Done" : {
+
+    },
+    "Locations" : {
+
+    },
+    "Person/Team" : {
+
+    },
+    "Priority" : {
+
+    },
+    "Reports" : {
+
+    },
+    "Save" : {
+
+    },
+    "Select Location" : {
+
+    },
+    "Settings" : {
+
+    },
+    "Shortcuts" : {
+
+    },
+    "Summary" : {
+
+    },
+    "Task Detail" : {
+
+    },
+    "Task List" : {
+
+    },
+    "Tasks" : {
+
+    },
+    "Title*" : {
+
+    },
+    "To Do list" : {
+
+    },
+    "ToDo" : {
+
+    },
+    "Video attached: %@" : {
+
+    },
+    "Work in progress." : {
+
+    }
+  },
+  "version" : "1.1"
+}

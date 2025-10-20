@@ -12,7 +12,7 @@ import SwiftData
 struct TaskFlowApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
+            Task.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -25,7 +25,7 @@ struct TaskFlowApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            TaskFlowTabBar()
         }
         .modelContainer(sharedModelContainer)
     }
