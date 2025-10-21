@@ -10,7 +10,9 @@ import SwiftData
 
 struct DashboardView: View {
     @Environment(\.modelContext) var context
-    @Query var tasks: [Task]
+    @Query var tasks: [TaskItem]
+    @Binding var selectedTab: TaskFlowTabBar.Tab
+    @State var viewModel: ViewModel = ViewModel()
     
     var body: some View {
         NavigationStack {
@@ -18,9 +20,9 @@ struct DashboardView: View {
                 Section{
                     VStack {
                         HStack {
-                            BoxLabel(title: "Waiting", count: tasks.count(where: { $0.taskState == .initial}))
-                            BoxLabel(title: "Ongoing", count: tasks.count(where: { $0.taskState == .workInProgress}))
-                            BoxLabel(title: "Complete", count: tasks.count(where: { $0.taskState == .done }))
+                            BoxLabel(title: "Waiting", count: viewModel.itemCount(for: .initial, context: context))
+                            BoxLabel(title: "Ongoing", count: viewModel.itemCount(for: .workInProgress, context: context))
+                            BoxLabel(title: "Complete", count: viewModel.itemCount(for: .done, context: context))
                         }
                         .frame(height: 100)
                         .padding(.horizontal)
@@ -31,13 +33,25 @@ struct DashboardView: View {
                     VStack {
                         HStack {
                             BoxLabel(title: "Tasks")
+                                .onTapGesture {
+                                    selectedTab = .tasks
+                                }
                             BoxLabel(title: "My Locations")
+                                .onTapGesture {
+                                    selectedTab = .locations
+                                }
                         }
                         .frame(height: 150)
                         .padding(.horizontal)
                         HStack {
                             BoxLabel(title: "My reports")
+                                .onTapGesture {
+                                    selectedTab = .reports
+                                }
                             BoxLabel(title: "Settings")
+                                .onTapGesture {
+                                    selectedTab = .settings
+                                }
                         }
                         .frame(height: 150)
                         .padding(.horizontal)
@@ -55,7 +69,8 @@ struct DashboardView: View {
 }
 
 #Preview {
-    DashboardView()
+    @Previewable @State var selectedTab: TaskFlowTabBar.Tab = .dashboard
+    DashboardView(selectedTab: $selectedTab)
 }
 
 

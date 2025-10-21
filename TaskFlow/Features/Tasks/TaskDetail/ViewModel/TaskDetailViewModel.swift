@@ -10,9 +10,9 @@ import Foundation
 extension TaskDetailView {
     @Observable
     class ViewModel {
-        var task: Task
+        var task: TaskItem
         
-        init(task: Task) {
+        init(task: TaskItem) {
             self.task = task
         }
         

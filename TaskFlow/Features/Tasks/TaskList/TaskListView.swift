@@ -6,18 +6,25 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct TaskListView: View {
-    @State var viewModel: ViewModel = ViewModel()
+    @Environment(\.modelContext) var context
+    @State var viewModel: ViewModel
     @State var isCreating: Bool = false
     @Namespace var transition
+    
+    init(context: ModelContext) {
+        let viewModel = ViewModel(context: context)
+        _viewModel = State(initialValue: viewModel)
+    }
     
     var body: some View {
         NavigationStack {
             List {
                 ForEach(viewModel.tasks, id:\.id) { task in
                     NavigationLink {
-                        //TODO: TaskDetailView
+                        TaskDetailView(task: task)
                     }
                     label: {
                         HStack {
@@ -34,14 +41,14 @@ struct TaskListView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Add a task", systemImage: "plus") {
-                        //TODO: Navigation to the creation
                         isCreating.toggle()
                     }
+                    .matchedTransitionSource(id: "sheet", in: transition)
                 }
-                .matchedTransitionSource(id: "sheet", in: transition)
+                
             }
             .navigationDestination(isPresented: $isCreating) {
-                TaskCreationView()
+                TaskCreationView(context: context)
                     .navigationTransition(.zoom(sourceID: "sheet", in: transition))
             }
         }
@@ -52,7 +59,8 @@ struct TaskListView: View {
 }
 
 #Preview {
-    TaskListView()
+    @Previewable @Environment(\.modelContext) var context
+    TaskListView(context: context)
 }
 
 

@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-class Task: Identifiable {
+class TaskItem: Identifiable {
     var id: UUID = UUID()
     
     var title: String
@@ -20,7 +20,8 @@ class Task: Identifiable {
     var category: String?
     var priority: Priority?
     @Relationship(deleteRule: .cascade)
-       var checklist: [ChecklistItem] = []
+    
+    var checklist: [ChecklistItem] = []
     var taskDescription: String?
     
     var taskState: TaskState
@@ -28,7 +29,7 @@ class Task: Identifiable {
     var todoList: String = ""
     
     @Relationship(deleteRule: .cascade)
-       var workInProgress: [WorkItem] = []
+    var ongoingContent: [WorkItem] = []
     
     
     
@@ -53,7 +54,7 @@ class Task: Identifiable {
         self.taskDescription = taskDescription
         self.taskState = taskState
         self.todoList = todoList
-        self.workInProgress = workInProgress
+        self.ongoingContent = workInProgress
         self.checklist = checklist
     }
 }
@@ -89,13 +90,23 @@ class Location {
 class WorkItem: Identifiable {
     var id: UUID = UUID()
     var text: String?
-    var mediaURL: URL?   // local file URL or remote URL
+    var mediaURL: URL?
     var mediaType: MediaType
     
-    init(text: String? = nil, mediaURL: URL? = nil, mediaType: MediaType = .text) {
+    // relationship
+    @Relationship(inverse: \TaskItem.ongoingContent)
+    var task: TaskItem?
+    
+    init(
+        text: String? = nil,
+        mediaURL: URL? = nil,
+        mediaType: MediaType = .text,
+        task: TaskItem? = nil
+    ) {
         self.text = text
         self.mediaURL = mediaURL
         self.mediaType = mediaType
+        self.task = task
     }
 }
 
@@ -106,8 +117,8 @@ enum MediaType: String, Codable {
     case audio
 }
 
-extension Task {
-    static var mock: Task {
+extension TaskItem {
+    static var mock: TaskItem {
         // Create a sample location
         let sampleLocation = Location(
             name: "Main Plant - Zone A",
@@ -132,7 +143,7 @@ extension Task {
         )
         
         // Build the task
-        return Task(
+        return TaskItem(
             id: UUID(),
             title: "Install Control Panel",
             location: sampleLocation,
@@ -144,7 +155,7 @@ extension Task {
             taskState: .workInProgress,
             todoList: "1. Mount panel\n2. Connect cables\n3. Perform test run",
             workInProgress: [note, photo, video],
-            checklist: [ChecklistItem(title: "item", isChecked: false)],
+            checklist: [ChecklistItem(title: "item", isChecked: false), ChecklistItem(title: "item", isChecked: false)],
         )
     }
 }

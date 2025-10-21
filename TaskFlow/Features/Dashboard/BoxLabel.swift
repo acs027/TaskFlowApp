@@ -15,6 +15,7 @@ struct BoxLabel: View {
             .fill(Color(uiColor: UIColor.systemGroupedBackground))
             .overlay(alignment: .topLeading) {
                 Text(title)
+                    .bold()
                     .padding()
             }
             .overlay(alignment: .center) {

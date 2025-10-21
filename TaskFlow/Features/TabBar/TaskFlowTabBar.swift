@@ -9,6 +9,7 @@ import SwiftUI
 
 struct TaskFlowTabBar: View {
     @State var selectedTab: Tab = .dashboard
+    @Environment(\.modelContext) var context
     
     enum Tab {
            case dashboard
@@ -21,13 +22,13 @@ struct TaskFlowTabBar: View {
     var body: some View {
         TabView(selection: $selectedTab) {
                     
-                    DashboardView()
+            DashboardView(selectedTab: $selectedTab)
                         .tabItem {
                             Label("Dashboard", systemImage: "house.fill")
                         }
                         .tag(Tab.dashboard)
                     
-                    TaskListView()
+                    TaskListView(context: context)
                         .tabItem {
                             Label("Tasks", systemImage: "checklist")
                         }
