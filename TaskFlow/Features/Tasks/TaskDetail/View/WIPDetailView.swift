@@ -12,6 +12,9 @@ struct WIPDetailView: View {
     let taskItem: TaskItem
     @State var isItemsExpanded: Bool = false
     @State var offset: CGFloat = 0
+    @State var isEditingText: Bool = false
+    @State var textContent: String = ""
+    
     @Environment(\.modelContext) var context
     
     var body: some View {
@@ -20,8 +23,6 @@ struct WIPDetailView: View {
                 VStack {
                     ForEach(taskItem.ongoingContent, id:\.id) { media in
                         switch media.mediaType {
-                        case .audio:
-                            AudioPlayerView(url: media.mediaURL)
                         case .image:
                             AsyncImage(url: media.mediaURL) { image in
                                 image.resizable()
@@ -44,13 +45,27 @@ struct WIPDetailView: View {
             addContentButton
         }
         .navigationTitle("WIP Content")
+        .sheet(isPresented: $isEditingText) {
+            VStack {
+                TextEditor(text: $textContent)
+                        .border(.secondary)
+                        .padding()
+                        .padding()
+                .navigationTitle("Editing todo")
+                Spacer()
+                Button("Add") {
+                    let item = WorkItem(text: textContent, mediaType: .text)
+                    taskItem.ongoingContent.append(item)
+                    isEditingText.toggle()
+                }
+            }
+        }
     }
     
     private var addContentButton: some View {
         GlassEffectContainer {
                     ZStack {
                         mediaButton(type: .text)
-                        mediaButton(type: .audio)
                         mediaButton(type: .image)
                         mediaButton(type: .video)
                     Button {
@@ -86,17 +101,16 @@ struct WIPDetailView: View {
                     .labelStyle(.iconOnly)
                     .frame(width: 50, height: 50)
                     .modifier(GlassMediaButton(isItemsExpanded: isItemsExpanded, offset: offset, degree: 0, duration: 0.4))
+                    .onTapGesture {
+                        isEditingText.toggle()
+                    }
             case .image:
                 ImagePickerView(taskItem: taskItem)
-                    .modifier(GlassMediaButton(isItemsExpanded: isItemsExpanded, offset: offset, degree: 30, duration: 0.6))
+                    .modifier(GlassMediaButton(isItemsExpanded: isItemsExpanded, offset: offset, degree: 45, duration: 0.6))
                     
             case .video:
                 VideoPickerView(task: taskItem, context: context)
-                    .modifier(GlassMediaButton(isItemsExpanded: isItemsExpanded, offset: offset, degree: 60, duration: 0.8))
-                    
-            case .audio:
-                AudioViewPickerViewWrapper(taskItem: taskItem)
-                    .modifier(GlassMediaButton(isItemsExpanded: isItemsExpanded, offset: offset, degree: 90, duration: 1))
+                    .modifier(GlassMediaButton(isItemsExpanded: isItemsExpanded, offset: offset, degree: 90, duration: 0.8))
             }
     }
 }

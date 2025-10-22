@@ -25,24 +25,7 @@ struct TaskCreationView: View {
                 Section("Title*") {
                     TextField("Title*", text: $viewModel.title)
                 }
-                Section {
-                    // Tap to expand/collapse
-                    Button(action: { isMapExpanded.toggle() }) {
-                        HStack {
-                            Text("Select Location")
-                            Spacer()
-                            Image(systemName: isMapExpanded ? "chevron.up" : "chevron.down")
-                        }
-                    }
-                    
-                    // Map appears when expanded
-                    if isMapExpanded {
-                        MapView(selectedCoordinate: $mapCoordinate)
-                            .frame(height: 250)
-                            .cornerRadius(10)
-                            .padding(.vertical, 4)
-                    }
-                }
+                locationSection
                 
                 Section("Deadline*") {
                     DatePicker("Deadline", selection: $viewModel.deadline, in: .now...)
@@ -53,32 +36,66 @@ struct TaskCreationView: View {
                     TextField("Person/Team", text: $viewModel.assignedUnit)
                 }
                 
-                Section("Additional Infos") {
-                    Picker("Priority", selection: $viewModel.priority) {
-                        ForEach(Priority.allCases, id:\.id) { priority in
-                            Text(priority.rawValue)
-                                .tag(priority.id)
-                        }
-                    }
-                    .pickerStyle(.segmented)
-                    //                    TextField("Priority", text: $title)
-                    TextField("Category", text: $viewModel.category)
-                    TextField("Control List", text: $viewModel.controlList)
-                    TextField("Description", text: $viewModel.description)
-                }
+                additionalSection
                 
             }
-            Button("Save") {
-                viewModel.saveTask()
-            }
-            .buttonStyle(.bordered)
-            .buttonSizing(.flexible)
-            .frame(maxWidth: .infinity)
-            .padding()
+          saveButton
         }
-        .alert("Fill all required fields", isPresented: $viewModel.isAlertShowing) { }
-//        .alert("Fill all required fields", isPresented: $viewModel.isAlertShowing)
+        .alert(viewModel.errorMessage, isPresented: $viewModel.isAlertShowing) { }
         .navigationTitle("Create a Task")
+        .onChange(of: mapCoordinate != nil) { oldValue, newValue in
+            if let coordinate = mapCoordinate {
+                let location = Location(name: "User", latitude: coordinate.latitude, longitude: coordinate.longitude)
+                viewModel.location = location
+            }
+        }
+    }
+    
+    private var locationSection: some View {
+        Section {
+            // Tap to expand/collapse
+            Button(action: { isMapExpanded.toggle() }) {
+                HStack {
+                    Text("Select Location")
+                    Spacer()
+                    Image(systemName: isMapExpanded ? "chevron.up" : "chevron.down")
+                }
+            }
+            
+            // Map appears when expanded
+            if isMapExpanded {
+                MapView(selectedCoordinate: $mapCoordinate)
+                    .frame(height: 250)
+                    .cornerRadius(10)
+                    .padding(.vertical, 4)
+            }
+        }
+    }
+    
+    private var additionalSection: some View {
+        Section("Additional Infos") {
+            Picker("Priority", selection: $viewModel.priority) {
+                ForEach(Priority.allCases, id:\.id) { priority in
+                    Text(priority.rawValue)
+                        .tag(priority)
+                }
+            }
+            .pickerStyle(.segmented)
+            //                    TextField("Priority", text: $title)
+            TextField("Category", text: $viewModel.category)
+            TextField("Control List", text: $viewModel.controlList)
+            TextField("Description", text: $viewModel.description)
+        }
+    }
+    
+    private var saveButton: some View {
+        Button("Save") {
+            viewModel.saveTask()
+        }
+        .buttonStyle(.bordered)
+        .buttonSizing(.flexible)
+        .frame(maxWidth: .infinity)
+        .padding()
     }
 }
 

@@ -12,18 +12,28 @@ extension DashboardView {
     @Observable
     class ViewModel {
         var tasks: [TaskItem] = []
-        
-        func itemCount(for taskState: TaskState, context: ModelContext) -> Int {
-            do {
-                let descriptor = FetchDescriptor<TaskItem>(predicate: #Predicate<TaskItem> { item in
-                    item.taskState == taskState
-                })
-                let result = try context.fetchCount(descriptor)
-                return result
-            } catch {
-                print(error.localizedDescription)
-            }
-            return 0
-        }
+        var counts: [TaskState: Int] = [:]
+                
+                func fetchTaskCounts(context: ModelContext) {
+                    do {
+                        // Fetch all tasks (single database call)
+                        let descriptor = FetchDescriptor<TaskItem>()
+                        let allTasks = try context.fetch(descriptor)
+                        
+                        // Group by taskState and count
+                        counts = Dictionary(
+                            grouping: allTasks,
+                            by: { $0.taskState }
+                        ).mapValues { $0.count }
+                        
+                    } catch {
+                        debugPrint("⚠️ Failed to fetch task counts: \(error)")
+                        counts = [:]
+                    }
+                }
+                
+                func count(for state: TaskState) -> Int {
+                    counts[state] ?? 0
+                }
     }
 }

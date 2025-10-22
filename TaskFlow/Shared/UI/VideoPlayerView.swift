@@ -13,6 +13,6 @@ struct VideoPlayerView: View {
     
     var body: some View {
         VideoPlayer(player: player)
-            .frame(width: 100)
+            .aspectRatio(16/9, contentMode: .fit)
     }
 }

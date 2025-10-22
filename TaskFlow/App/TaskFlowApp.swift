@@ -10,6 +10,7 @@ import SwiftData
 
 @main
 struct TaskFlowApp: App {
+    @State var userManager = UserManager()
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             TaskItem.self,
@@ -26,6 +27,7 @@ struct TaskFlowApp: App {
     var body: some Scene {
         WindowGroup {
             TaskFlowTabBar()
+                .environment(userManager)
         }
         .modelContainer(sharedModelContainer)
     }

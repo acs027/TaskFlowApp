@@ -28,6 +28,7 @@ extension TaskCreationView {
         let context: ModelContext
         
         var isAlertShowing: Bool = false
+        var errorMessage: String = ""
         
         init(context: ModelContext) {
             self.context = context
@@ -50,10 +51,18 @@ extension TaskCreationView {
         }
         
         func isValid() -> Bool {
-               guard !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return false }
-               guard !assignedUnit.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return false }
-               guard location != nil else { return false }
-               guard deadline > Date() else { return false }
+               guard !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+                   errorMessage = "Title is missing"
+                   return false }
+               guard !assignedUnit.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+                   errorMessage = "Assigned unit is missing"
+                   return false }
+               guard location != nil else {
+                   errorMessage = "Location is missing"
+                   return false }
+               guard deadline > Date() else {
+                   errorMessage = "Date is missing"
+                   return false }
                
                return true
            }

@@ -4,6 +4,7 @@
 //
 //  Created by ali cihan on 20.10.2025.
 //
+
 import SwiftUI
 import PhotosUI
 import AVKit
@@ -27,27 +28,7 @@ struct VideoPickerView: View {
             Label("Add a video", systemImage: "video.fill")
                 .labelStyle(.iconOnly)
                 .frame(width: 50, height: 50)
-            
         }
-        //
-        //            if let videoURL {
-        //                Text("✅ Saved to Documents:")
-        //                    .font(.headline)
-        //                Text(videoURL.lastPathComponent)
-        //                    .font(.subheadline)
-        //                    .foregroundColor(.gray)
-        //
-        //                VideoPlayer(player: AVPlayer(url: videoURL))
-        //                    .frame(height: 250)
-        //                    .clipShape(RoundedRectangle(cornerRadius: 12))
-        //                    .padding(.top)
-        //
-        //                if showSavedMessage {
-        //                    Text("🎉 Saved to SwiftData!")
-        //                        .font(.headline)
-        //                        .foregroundColor(.green)
-        //                }
-        //            }
         .onChange(of: selectedItem) { newItem in
             handlePickedVideo(from: newItem)
         }
@@ -55,10 +36,9 @@ struct VideoPickerView: View {
     
     private func handlePickedVideo(from newItem: PhotosPickerItem?) {
         Task {
-            await handlePickedVideo(from: newItem)
+            await viewModel.handlePickedVideo(from: newItem)
         }
     }
-  
 }
 
 extension VideoPickerView {
@@ -72,6 +52,11 @@ extension VideoPickerView {
         init(task: TaskItem, context: ModelContext) {
             self.taskItem = task
             self.context = context
+            // Load existing video if available
+            if let existingItem = taskItem.ongoingContent.first(where: { $0.mediaType == .video }),
+               let url = existingItem.mediaURL {
+                self.videoURL = url
+            }
         }
         
         // MARK: - Video Handling
@@ -79,40 +64,40 @@ extension VideoPickerView {
             guard let item else { return }
             
             do {
-                if let tempURL = try await item.loadTransferable(type: URL.self) {
-                    saveVideo(tempURL)
-                } else if let data = try await item.loadTransferable(type: Data.self) {
-                    // Fallback: write data manually
-                    let tempFile = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".mov")
-                    try data.write(to: tempFile)
-                    saveVideo(tempFile)
+                // Load as Data to ensure we have full control
+                guard let data = try await item.loadTransferable(type: Data.self) else {
+                    print("Failed to load video data")
+                    return
+                }
+                
+                await MainActor.run {
+                    saveVideoData(data)
                 }
             } catch {
                 print("Error loading video: \(error)")
             }
         }
         
-        func saveVideo(_ sourceURL: URL) {
-            let fileName = sourceURL.lastPathComponent
+        func saveVideoData(_ data: Data) {
+            // Create unique filename
+            let fileName = "\(UUID().uuidString).mov"
             let destination = getDocumentsDirectory().appendingPathComponent(fileName)
             
             do {
-                if FileManager.default.fileExists(atPath: destination.path) {
-                    try FileManager.default.removeItem(at: destination)
-                }
-                try FileManager.default.copyItem(at: sourceURL, to: destination)
+                // Write data directly to Documents
+                try data.write(to: destination)
                 videoURL = destination
                 
                 // Create and save WorkItem in SwiftData
                 let item = WorkItem(text: "My picked video", mediaURL: destination, mediaType: .video)
                 taskItem.ongoingContent.append(item)
-                context.insert(item)
                 try context.save()
                 showSavedMessage = true
                 
-                print("✅ Video saved to Documents and SwiftData:", destination)
+                print("✅ Video saved to Documents:", destination.path)
+                print("✅ File exists:", FileManager.default.fileExists(atPath: destination.path))
             } catch {
-                print("Error saving video:", error)
+                print("❌ Error saving video:", error)
             }
         }
         

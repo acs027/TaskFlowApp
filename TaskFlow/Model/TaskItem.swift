@@ -19,9 +19,10 @@ class TaskItem: Identifiable {
     
     var category: String?
     var priority: Priority?
-    @Relationship(deleteRule: .cascade)
     
+    @Relationship(deleteRule: .cascade)
     var checklist: [ChecklistItem] = []
+    
     var taskDescription: String?
     
     var taskState: TaskState
@@ -60,19 +61,23 @@ class TaskItem: Identifiable {
 }
 
 @Model
-class ChecklistItem {
+class ChecklistItem: Identifiable {
     var id: UUID = UUID()
     var title: String
     var isChecked: Bool
     
-    init(title: String, isChecked: Bool = false) {
+    @Relationship(inverse: \TaskItem.ongoingContent)
+    var task: TaskItem?
+    
+    init(title: String, isChecked: Bool = false, task: TaskItem? = nil) {
         self.title = title
         self.isChecked = isChecked
+        self.task = task
     }
 }
 
 @Model
-class Location {
+class Location: Identifiable {
     var id: UUID
      var name: String
      var latitude: Double
@@ -110,12 +115,7 @@ class WorkItem: Identifiable {
     }
 }
 
-enum MediaType: String, Codable {
-    case text
-    case image
-    case video
-    case audio
-}
+
 
 extension TaskItem {
     static var mock: TaskItem {

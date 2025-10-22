@@ -12,47 +12,49 @@ struct TaskFlowTabBar: View {
     @Environment(\.modelContext) var context
     
     enum Tab {
-           case dashboard
-           case tasks
-           case locations
-           case reports
-           case settings
-       }
+        case dashboard
+        case tasks
+        case locations
+        case reports
+        case settings
+    }
     
     var body: some View {
         TabView(selection: $selectedTab) {
-                    
+            
             DashboardView(selectedTab: $selectedTab)
-                        .tabItem {
-                            Label("Dashboard", systemImage: "house.fill")
-                        }
-                        .tag(Tab.dashboard)
-                    
-                    TaskListView(context: context)
-                        .tabItem {
-                            Label("Tasks", systemImage: "checklist")
-                        }
-                        .tag(Tab.tasks)
-                    
-            Color.clear
-                        .tabItem {
-                            Label("Locations", systemImage: "mappin.and.ellipse")
-                        }
-                        .tag(Tab.locations)
-                    
-            Color.clear
-                        .tabItem {
-                            Label("Reports", systemImage: "doc.text.magnifyingglass")
-                        }
-                        .tag(Tab.reports)
-                    
-            Color.clear
-                        .tabItem {
-                            Label("Settings", systemImage: "gearshape.fill")
-                        }
-                        .tag(Tab.settings)
+                .tabItem {
+                    Label("Dashboard", systemImage: "house.fill")
                 }
-                .tint(.accentColor)
+                .tag(Tab.dashboard)
+            
+            NavigationStack {
+                TaskListView(context: context)
+            }
+            .tabItem {
+                Label("Tasks", systemImage: "checklist")
+            }
+            .tag(Tab.tasks)
+            
+            Color.clear
+                .tabItem {
+                    Label("Locations", systemImage: "mappin.and.ellipse")
+                }
+                .tag(Tab.locations)
+            
+            Color.clear
+                .tabItem {
+                    Label("Reports", systemImage: "doc.text.magnifyingglass")
+                }
+                .tag(Tab.reports)
+            
+            Color.clear
+                .tabItem {
+                    Label("Settings", systemImage: "gearshape.fill")
+                }
+                .tag(Tab.settings)
+        }
+        .tint(.accentColor)
     }
 }
 

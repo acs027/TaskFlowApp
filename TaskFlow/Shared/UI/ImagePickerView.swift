@@ -21,16 +21,6 @@ struct ImagePickerView: View {
                 .labelStyle(.iconOnly)
                 .frame(width: 50, height: 50)
         }
-//        .buttonStyle(.glass)
-//        .glassEffect()
-        
-        //            if let image {
-        //                Image(uiImage: image)
-        //                    .resizable()
-        //                    .scaledToFit()
-        //                    .frame(height: 200)
-        //                    .clipShape(RoundedRectangle(cornerRadius: 12))
-        //            }
         .onChange(of: selectedItem) { newItem in
             Task { await handlePickedImage(from: newItem) }
         }

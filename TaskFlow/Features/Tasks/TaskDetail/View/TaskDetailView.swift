@@ -6,12 +6,18 @@
 //
 
 import SwiftUI
+import SwiftData
+import AVKit
 
 struct TaskDetailView: View {
+    @Environment(UserManager.self) var userManager
     @State var viewModel: ViewModel
+    @State var isEditingTodo: Bool = false
+    @State var isEditingReview: Bool = false
+    @State var isEditingOngoingContent: Bool = false
     
-    init(task: TaskItem) {
-        self.viewModel = ViewModel(task: task)
+    init(task: TaskItem, context: ModelContext) {
+        self.viewModel = ViewModel(task: task, context: context)
     }
     
     var body: some View {
@@ -26,6 +32,12 @@ struct TaskDetailView: View {
                     .frame(height: 50)
             }
         }
+        .navigationDestination(isPresented: $isEditingReview) {
+            ChecklistEditView(viewModel: $viewModel)
+        }
+        .navigationDestination(isPresented: $isEditingOngoingContent, destination: {
+            WIPDetailView(taskItem: viewModel.task)
+        })
         .navigationTitle("Task Detail")
     }
     
@@ -42,71 +54,94 @@ struct TaskDetailView: View {
     
     private var todoSection: some View {
         Section {
-            Text("ToDo")
-                .bold()
-                .frame(height: 20)
-            //
-            Text("To Do list")
+            HStack {
+                Text("ToDo")
+                    .bold()
+                    .frame(height: 20)
+                Spacer()
+                if userManager.role == .admin {
+                    Button("Edit") {
+                        isEditingTodo.toggle()
+                    }
+                }
+            }
+            
+            Text(viewModel.task.todoList)
                 .frame(height: 50)
                 .multilineTextAlignment(.leading)
+        }
+        .sheet(isPresented: $isEditingTodo) {
+            TodoEditView(viewModel: $viewModel)
         }
     }
     
     private var ongoingSection: some View {
         Section {
-            NavigationLink {
-                WIPDetailView(taskItem: viewModel.task)
-            }
-            label: {
-                VStack(alignment: .leading) {
-                    Text("Ongoing")
-                        .bold()
-                        .frame(height: 20)
-                    Divider()
-                    ForEach(viewModel.task.ongoingContent, id:\.id) { media in
-                        
-                        switch media.mediaType {
-                        case .audio:
-                            Label("Audio note attached", systemImage: "waveform")
-                        case .image:
-                            AsyncImage(url: media.mediaURL) { image in
-                                image.resizable()
-                                    .frame(width: 50, height: 50)
-                            } placeholder: {
-                                Color.blue
-                                    .frame(width: 50, height: 50)
-                            }
-                        case .text:
-                            Text(media.text ?? "")
-                        case .video:
-                            Label("Video attached: \(media.mediaURL?.lastPathComponent ?? "")", systemImage: "video.fill")
+            VStack(alignment: .leading) {
+                Text("Ongoing")
+                    .bold()
+                    .frame(height: 20)
+                Spacer()
+                Button("Edit") {
+                    isEditingOngoingContent.toggle()
+                }
+                Divider()
+                ForEach(viewModel.task.ongoingContent, id:\.id) { media in
+                    switch media.mediaType {
+                    case .image:
+                        AsyncImage(url: media.mediaURL) { image in
+                            image.resizable()
+                                .frame(width: 50, height: 50)
+                        } placeholder: {
+                            Color.blue
+                                .frame(width: 50, height: 50)
                         }
+                    case .text:
+                        Text(media.text ?? "")
+                    case .video:
+                        VStack {
+                            if let url = media.mediaURL {
+                                VideoPlayerView(player: AVPlayer(url: url))
+                                Label("Video attached: \(media.mediaURL?.lastPathComponent ?? "")", systemImage: "video.fill")
+                            }
+                        }
+                        
                     }
                 }
             }
+            
         }
     }
     
     private var reviewSection: some View {
         Section {
-            Text("Review")
-                .bold()
-                .frame(height: 20)
+            HStack {
+                Text("Review")
+                    .bold()
+                    .frame(height: 20)
+                Spacer()
+                if userManager.role == .admin {
+                    Button("Edit") {
+                        isEditingReview.toggle()
+                    }
+                }
+            }
             ForEach($viewModel.task.checklist, id:\.id) { $item in
                 Toggle(isOn: $item.isChecked) {
                     Text(item.title)
                 }
                 .toggleStyle(iOSCheckboxToggleStyle())
             }
+            
         }
     }
 }
 
-#Preview {
-    NavigationStack {
-        TaskDetailView(task: TaskItem.mock)
-    }
-}
+//#Preview {
+//    NavigationStack {
+//        TaskDetailView(task: TaskItem.mock)
+//    }
+//}
 
 
 

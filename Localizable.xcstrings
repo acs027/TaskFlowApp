@@ -1,23 +1,25 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "%@ : %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@ : %2$@"
-          }
-        }
-      }
-    },
     "%lld" : {
 
     },
-    "+ Create a task" : {
+    "Add" : {
+
+    },
+    "Add a check" : {
+
+    },
+    "Add a checklist row" : {
 
     },
     "Add a task" : {
+
+    },
+    "Add a video" : {
+
+    },
+    "Add an image" : {
 
     },
     "Additional Infos" : {
@@ -26,16 +28,16 @@
     "Assigned person/team*" : {
 
     },
-    "Audio note attached" : {
-
-    },
     "Category" : {
 
     },
-    "Control" : {
+    "Checklist" : {
 
     },
     "Control List" : {
+
+    },
+    "Create a task" : {
 
     },
     "Create a Task" : {
@@ -50,13 +52,37 @@
     "Deadline*" : {
 
     },
+    "Delete" : {
+
+    },
     "Description" : {
 
     },
     "Done" : {
 
     },
+    "Edit" : {
+
+    },
+    "Edit Checklist" : {
+
+    },
+    "Editing todo" : {
+
+    },
+    "Enter checkist row" : {
+
+    },
+    "Expand" : {
+
+    },
     "Locations" : {
+
+    },
+    "marker" : {
+
+    },
+    "Ongoing" : {
 
     },
     "Person/Team" : {
@@ -66,6 +92,9 @@
 
     },
     "Reports" : {
+
+    },
+    "Review" : {
 
     },
     "Save" : {
@@ -92,19 +121,22 @@
     "Tasks" : {
 
     },
-    "Title*" : {
+    "Text" : {
 
     },
-    "To Do list" : {
+    "Title*" : {
 
     },
     "ToDo" : {
 
     },
+    "TODO" : {
+
+    },
     "Video attached: %@" : {
 
     },
-    "Work in progress." : {
+    "WIP Content" : {
 
     }
   },

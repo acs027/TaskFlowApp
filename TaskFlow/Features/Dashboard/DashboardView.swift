@@ -10,60 +10,80 @@ import SwiftData
 
 struct DashboardView: View {
     @Environment(\.modelContext) var context
-    @Query var tasks: [TaskItem]
+    @Environment(UserManager.self) var userManager
     @Binding var selectedTab: TaskFlowTabBar.Tab
     @State var viewModel: ViewModel = ViewModel()
+    @State var isCreating: Bool = false
     
     var body: some View {
         NavigationStack {
             VStack {
-                Section{
-                    VStack {
-                        HStack {
-                            BoxLabel(title: "Waiting", count: viewModel.itemCount(for: .initial, context: context))
-                            BoxLabel(title: "Ongoing", count: viewModel.itemCount(for: .workInProgress, context: context))
-                            BoxLabel(title: "Complete", count: viewModel.itemCount(for: .done, context: context))
-                        }
-                        .frame(height: 100)
-                        .padding(.horizontal)
-                    }
-                }
-                
-                Section("Shortcuts") {
-                    VStack {
-                        HStack {
-                            BoxLabel(title: "Tasks")
-                                .onTapGesture {
-                                    selectedTab = .tasks
-                                }
-                            BoxLabel(title: "My Locations")
-                                .onTapGesture {
-                                    selectedTab = .locations
-                                }
-                        }
-                        .frame(height: 150)
-                        .padding(.horizontal)
-                        HStack {
-                            BoxLabel(title: "My reports")
-                                .onTapGesture {
-                                    selectedTab = .reports
-                                }
-                            BoxLabel(title: "Settings")
-                                .onTapGesture {
-                                    selectedTab = .settings
-                                }
-                        }
-                        .frame(height: 150)
-                        .padding(.horizontal)
-                    }
-                }
+               summarySection
+                shortcutsSection
+             
                 Spacer()
-                Button("+ Create a task") {
-                    
+                if userManager.role == .admin {
+                    createButton
                 }
-                .buttonStyle(.borderedProminent)
             }
             .navigationTitle("Summary")
+            .navigationDestination(isPresented: $isCreating) {
+                TaskCreationView(context: context)
+            }
+        }
+        .onAppear {
+            viewModel.fetchTaskCounts(context: context)
+        }
+    }
+    
+    private var summarySection: some View {
+        Section{
+            VStack {
+                HStack {
+                    BoxLabel(title: "Waiting", count: viewModel.count(for: .initial))
+                             BoxLabel(title: "Ongoing", count: viewModel.count(for: .workInProgress))
+                             BoxLabel(title: "Complete", count: viewModel.count(for: .done))
+                }
+                .frame(height: 100)
+                .padding(.horizontal)
+            }
+        }
+    }
+    
+    private var shortcutsSection: some View {
+        Section("Shortcuts") {
+            VStack {
+                HStack {
+                    BoxLabel(title: "Tasks")
+                        .onTapGesture {
+                            selectedTab = .tasks
+                        }
+                    BoxLabel(title: "My Locations")
+                        .onTapGesture {
+                            selectedTab = .locations
+                        }
+                }
+                .frame(height: 150)
+                .padding(.horizontal)
+                HStack {
+                    BoxLabel(title: "My reports")
+                        .onTapGesture {
+                            selectedTab = .reports
+                        }
+                    BoxLabel(title: "Settings")
+                        .onTapGesture {
+                            selectedTab = .settings
+                        }
+                }
+                .frame(height: 150)
+                .padding(.horizontal)
+            }
+        }
+    }
+    
+    private var createButton: some View {
+        Button("Create a task", systemImage: "plus") {
+            isCreating.toggle()
         }
     }
 }
