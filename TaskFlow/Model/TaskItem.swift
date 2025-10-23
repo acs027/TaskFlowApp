@@ -23,26 +23,24 @@ class TaskItem: Identifiable {
     @Relationship(deleteRule: .cascade)
     var checklist: [ChecklistItem] = []
     
-    var taskDescription: String?
+    var taskDescription: String
     
     var taskState: TaskState
-    
-    var todoList: String = ""
     
     @Relationship(deleteRule: .cascade)
     var ongoingContent: [WorkItem] = []
     
     
     
-    init(id: UUID, title: String,
+    init(id: UUID,
+         title: String,
          location: Location,
          deadline: Date,
          assignedUnit: String,
          category: String? = nil,
          priority: Priority? = nil,
-         taskDescription: String? = nil,
+         taskDescription: String,
          taskState: TaskState,
-         todoList: String,
          workInProgress: [WorkItem] = [],
          checklist: [ChecklistItem] = []) {
         self.id = id
@@ -54,7 +52,6 @@ class TaskItem: Identifiable {
         self.priority = priority
         self.taskDescription = taskDescription
         self.taskState = taskState
-        self.todoList = todoList
         self.ongoingContent = workInProgress
         self.checklist = checklist
     }
@@ -152,8 +149,7 @@ extension TaskItem {
             category: "Installation",
             priority: .high,
             taskDescription: "Install and test the main control panel in Zone A. Ensure all connections are secure and labeled.",
-            taskState: .workInProgress,
-            todoList: "1. Mount panel\n2. Connect cables\n3. Perform test run",
+            taskState: .ongoing,
             workInProgress: [note, photo, video],
             checklist: [ChecklistItem(title: "item", isChecked: false), ChecklistItem(title: "item", isChecked: false)],
         )

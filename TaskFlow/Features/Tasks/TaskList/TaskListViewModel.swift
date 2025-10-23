@@ -11,11 +11,13 @@ import SwiftData
 extension TaskListView {
     @Observable
     class ViewModel {
-        let context: ModelContext
+        private let context: ModelContext
+        private let syncManager: TaskSyncManager
         var tasks: [TaskItem] = []
         
         init(context: ModelContext) {
             self.context = context
+            self.syncManager = TaskSyncManager(context: context)
             fetchData()
         }
         
@@ -26,11 +28,17 @@ extension TaskListView {
         
         func fetchData() {
                  do {
-                     let descriptor = FetchDescriptor<TaskItem>(sortBy: [SortDescriptor(\.title)])
+                     let descriptor = FetchDescriptor<TaskItem>(sortBy: [SortDescriptor(\.deadline)])
                      tasks = try context.fetch(descriptor)
                  } catch {
                      print("Fetch failed")
                  }
              }
+        
+        func sync() async {
+            await syncManager.syncFirebaseToLocal()
+            await syncManager.syncLocalToFirebase()
+            fetchData()
+        }
     }
 }

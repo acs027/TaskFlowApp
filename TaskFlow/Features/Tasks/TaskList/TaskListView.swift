@@ -23,10 +23,7 @@ struct TaskListView: View {
     var body: some View {
         List {
             ForEach(viewModel.tasks, id:\.id) { task in
-                NavigationLink {
-                    TaskDetailView(task: task, context: context)
-                }
-                label: {
+                NavigationLink(destination: TaskDetailView(task: task, context: context)) {
                     HStack {
                         Text(task.title)
                         Spacer()
@@ -35,6 +32,7 @@ struct TaskListView: View {
                         Text(task.deadline, style: .relative)
                     }
                 }
+                .listRowBackground(Color.backgroundColor(for: task))
             }
         }
         .navigationTitle("Task List")
@@ -56,6 +54,9 @@ struct TaskListView: View {
         .onAppear {
             viewModel.fetchData()
         }
+//        .task {
+//            await viewModel.sync()
+//        }
     }
     
 }

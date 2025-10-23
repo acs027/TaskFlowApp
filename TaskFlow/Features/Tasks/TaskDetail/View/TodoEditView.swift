@@ -15,7 +15,7 @@ extension TaskDetailView {
         
         var body: some View {
             VStack {
-                TextEditor(text: $viewModel.task.todoList)
+                TextEditor(text: $viewModel.task.taskDescription)
                         .border(.secondary)
                         .padding()
                         .padding()

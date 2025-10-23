@@ -10,6 +10,7 @@ import SwiftData
 
 @main
 struct TaskFlowApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     @State var userManager = UserManager()
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
@@ -26,7 +27,8 @@ struct TaskFlowApp: App {
 
     var body: some Scene {
         WindowGroup {
-            TaskFlowTabBar()
+//            TaskFlowTabBar()
+            AuthView()
                 .environment(userManager)
         }
         .modelContainer(sharedModelContainer)

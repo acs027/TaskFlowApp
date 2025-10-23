@@ -42,7 +42,9 @@ struct TaskFlowTabBar: View {
                 }
                 .tag(Tab.locations)
             
-            Color.clear
+            NavigationStack {
+                ReportListView()
+            }
                 .tabItem {
                     Label("Reports", systemImage: "doc.text.magnifyingglass")
                 }

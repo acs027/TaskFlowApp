@@ -25,10 +25,19 @@
     "Additional Infos" : {
 
     },
+    "Already have an account? " : {
+
+    },
     "Assigned person/team*" : {
 
     },
+    "Assigned unit/person : " : {
+
+    },
     "Category" : {
+
+    },
+    "Change Status -> %@" : {
 
     },
     "Checklist" : {
@@ -58,7 +67,13 @@
     "Description" : {
 
     },
-    "Done" : {
+    "Description : " : {
+
+    },
+    "Document Date : " : {
+
+    },
+    "Don't have an account? " : {
 
     },
     "Edit" : {
@@ -70,10 +85,16 @@
     "Editing todo" : {
 
     },
+    "Email" : {
+
+    },
     "Enter checkist row" : {
 
     },
     "Expand" : {
+
+    },
+    "Export PDF" : {
 
     },
     "Locations" : {
@@ -85,10 +106,19 @@
     "Ongoing" : {
 
     },
+    "Password" : {
+
+    },
+    "Pasword" : {
+
+    },
     "Person/Team" : {
 
     },
     "Priority" : {
+
+    },
+    "Register now" : {
 
     },
     "Reports" : {
@@ -109,10 +139,28 @@
     "Shortcuts" : {
 
     },
+    "Sign in now" : {
+
+    },
+    "Sign in with Email" : {
+
+    },
+    "Sign in with Google" : {
+
+    },
+    "Sign up with Email" : {
+
+    },
+    "Sign up with Google" : {
+
+    },
     "Summary" : {
 
     },
     "Task Detail" : {
+
+    },
+    "Task Flow" : {
 
     },
     "Task List" : {
@@ -127,7 +175,7 @@
     "Title*" : {
 
     },
-    "ToDo" : {
+    "To do" : {
 
     },
     "TODO" : {

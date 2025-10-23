@@ -22,7 +22,7 @@ extension TaskCreationView {
         // Optionals
         var category: String = ""
         var priority: Priority?
-        var controlList: String = ""
+        var checkList: String = ""
         var description: String = ""
         
         let context: ModelContext
@@ -34,10 +34,12 @@ extension TaskCreationView {
             self.context = context
         }
         
+        //TODO: I will figure out how we get checklist while task creation
+        //TextEditor Checklist section, cast them CheckListItem with new line seperator
         func saveTask() {
                 if isValid() {
                     do {
-                        let item = TaskItem(id: UUID(), title: title, location: location!, deadline: deadline, assignedUnit: assignedUnit, category: category, priority: priority, taskDescription: description, taskState: taskState, todoList: controlList)
+                        let item = TaskItem(id: UUID(), title: title, location: location!, deadline: deadline, assignedUnit: assignedUnit, category: category, priority: priority, taskDescription: description, taskState: taskState)
                         context.insert(item)
                         try context.save()
                         print("saved")

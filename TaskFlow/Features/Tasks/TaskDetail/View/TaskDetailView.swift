@@ -27,26 +27,33 @@ struct TaskDetailView: View {
             ongoingSection
             reviewSection
             Section {
-                Text("Done")
+                Text(TaskState.completed.rawValue)
                     .bold()
                     .frame(height: 50)
             }
         }
+        .safeAreaInset(edge: .bottom, content: {
+            changeStatusSavePDFButtons
+        })
         .navigationDestination(isPresented: $isEditingReview) {
             ChecklistEditView(viewModel: $viewModel)
         }
         .navigationDestination(isPresented: $isEditingOngoingContent, destination: {
             WIPDetailView(taskItem: viewModel.task)
         })
+        .sheet(isPresented: $isEditingTodo) {
+            TodoEditView(viewModel: $viewModel)
+        }
         .navigationTitle("Task Detail")
     }
     
     private var taskState: some View {
         HStack {
-            TaskStateLabel(title: "Planned", background: .yellow)
-            TaskStateLabel(title: "Todo", background: .blue)
-            TaskStateLabel(title: "Ongoing", background: .teal)
-            TaskStateLabel(title: "Review", background: .green)
+            ForEach(TaskState.allCases, id:\.id) { state in
+                if state != .initial {
+                    TaskStateLabel(taskState: state, currentState: viewModel.task.taskState)
+                }
+            }
         }
         .listRowBackground(Color(uiColor: UIColor.systemGroupedBackground))
         
@@ -55,7 +62,7 @@ struct TaskDetailView: View {
     private var todoSection: some View {
         Section {
             HStack {
-                Text("ToDo")
+                Text("To do")
                     .bold()
                     .frame(height: 20)
                 Spacer()
@@ -66,24 +73,44 @@ struct TaskDetailView: View {
                 }
             }
             
-            Text(viewModel.task.todoList)
-                .frame(height: 50)
-                .multilineTextAlignment(.leading)
+            if !viewModel.task.taskDescription.isEmpty {
+                Text(viewModel.task.taskDescription)
+                    .frame(height: 50)
+                    .multilineTextAlignment(.leading)
+            }
         }
-        .sheet(isPresented: $isEditingTodo) {
-            TodoEditView(viewModel: $viewModel)
+    }
+    
+    @ViewBuilder
+    private var changeStatusSavePDFButtons: some View {
+        if viewModel.isStateButton() {
+            Button {
+                changeStatus()
+            } label: {
+                Label("Change Status -> \(viewModel.task.taskState.nextStep.rawValue)", systemImage: "arrowshape.right.circle")
+                    .padding()
+                    .glassEffect()
+            }
+            .padding()
+        } else {
+            ConvertToPDFView(task: viewModel.task)
+                .padding()
+                .glassEffect()
+                .padding()
         }
     }
     
     private var ongoingSection: some View {
         Section {
             VStack(alignment: .leading) {
-                Text("Ongoing")
-                    .bold()
-                    .frame(height: 20)
-                Spacer()
-                Button("Edit") {
-                    isEditingOngoingContent.toggle()
+                HStack {
+                    Text("Ongoing")
+                        .bold()
+                        .frame(height: 20)
+                    Spacer()
+                    Button("Edit") {
+                        isEditingOngoingContent.toggle()
+                    }
                 }
                 Divider()
                 ForEach(viewModel.task.ongoingContent, id:\.id) { media in
@@ -109,7 +136,6 @@ struct TaskDetailView: View {
                     }
                 }
             }
-            
         }
     }
     
@@ -130,18 +156,36 @@ struct TaskDetailView: View {
                 Toggle(isOn: $item.isChecked) {
                     Text(item.title)
                 }
+                .disabled(viewModel.isChecklistToggleDisabled())
                 .toggleStyle(iOSCheckboxToggleStyle())
             }
             
         }
     }
+    
+    private func changeStatus() {
+        viewModel.changeStatus()
+    }
 }
 
-//#Preview {
-//    NavigationStack {
-//        TaskDetailView(task: TaskItem.mock)
-//    }
-//}
+#Preview {
+    @Previewable  @State var userManager = UserManager()
+    let container = try! ModelContainer(
+        for: TaskItem.self,
+        configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+    )
+    
+    let mockTask = TaskItem.mock
+    container.mainContext.insert(mockTask)
+    
+    return TabView {
+        NavigationStack {
+            TaskDetailView(task: mockTask, context: container.mainContext)
+                .environment(userManager)
+        }
+    }
+    .modelContainer(container)
+}
 
 
 

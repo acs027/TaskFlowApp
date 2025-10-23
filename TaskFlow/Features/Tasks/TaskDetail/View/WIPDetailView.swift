@@ -19,6 +19,7 @@ struct WIPDetailView: View {
     
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
+            Color.clear
             ScrollView {
                 VStack {
                     ForEach(taskItem.ongoingContent, id:\.id) { media in
@@ -97,13 +98,13 @@ struct WIPDetailView: View {
     private func mediaButton(type: MediaType) -> some View {
             switch type {
             case .text:
-                Label("Text", systemImage: "text.document")
-                    .labelStyle(.iconOnly)
-                    .frame(width: 50, height: 50)
-                    .modifier(GlassMediaButton(isItemsExpanded: isItemsExpanded, offset: offset, degree: 0, duration: 0.4))
-                    .onTapGesture {
-                        isEditingText.toggle()
-                    }
+                Button { isEditingText.toggle() }
+                label : {
+                    Label("Text", systemImage: "text.document")
+                        .labelStyle(.iconOnly)
+                        .frame(width: 50, height: 50)
+                        .modifier(GlassMediaButton(isItemsExpanded: isItemsExpanded, offset: offset, degree: 0, duration: 0.4))
+                }
             case .image:
                 ImagePickerView(taskItem: taskItem)
                     .modifier(GlassMediaButton(isItemsExpanded: isItemsExpanded, offset: offset, degree: 45, duration: 0.6))

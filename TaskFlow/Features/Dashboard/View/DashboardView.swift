@@ -41,8 +41,8 @@ struct DashboardView: View {
             VStack {
                 HStack {
                     BoxLabel(title: "Waiting", count: viewModel.count(for: .initial))
-                             BoxLabel(title: "Ongoing", count: viewModel.count(for: .workInProgress))
-                             BoxLabel(title: "Complete", count: viewModel.count(for: .done))
+                             BoxLabel(title: "Ongoing", count: viewModel.count(for: .ongoing))
+                             BoxLabel(title: "Complete", count: viewModel.count(for: .completed))
                 }
                 .frame(height: 100)
                 .padding(.horizontal)

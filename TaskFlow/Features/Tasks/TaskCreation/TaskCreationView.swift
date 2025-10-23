@@ -9,6 +9,8 @@ import SwiftUI
 import CoreLocation
 import SwiftData
 
+//TODO: Error messages
+
 struct TaskCreationView: View {
     @State private var viewModel: ViewModel
     @State var isMapExpanded: Bool = false
@@ -83,7 +85,7 @@ struct TaskCreationView: View {
             .pickerStyle(.segmented)
             //                    TextField("Priority", text: $title)
             TextField("Category", text: $viewModel.category)
-            TextField("Control List", text: $viewModel.controlList)
+            TextField("Control List", text: $viewModel.checkList)
             TextField("Description", text: $viewModel.description)
         }
     }

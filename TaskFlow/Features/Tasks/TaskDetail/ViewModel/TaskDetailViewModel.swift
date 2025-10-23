@@ -16,6 +16,7 @@ extension TaskDetailView {
         var task: TaskItem
         let context: ModelContext
         var processState: ProcessState = .done
+        var errorMessage: String?
         
         init(task: TaskItem, context: ModelContext) {
             self.task = task
@@ -49,6 +50,28 @@ extension TaskDetailView {
             } else {
                 processState = .done
             }
+        }
+        
+        func changeStatus() {
+            if task.taskState == .review, !isCheckListDone() {
+                return
+            }
+            self.task.taskState = self.task.taskState.nextStep
+        }
+        
+        func isStateButton() -> Bool {
+            if task.taskState == .completed {
+                return false
+            }
+            return true
+        }
+        
+        func isCheckListDone() -> Bool {
+            task.checklist.filter({$0.isChecked == false}).isEmpty
+        }
+        
+        func isChecklistToggleDisabled() -> Bool {
+            task.taskState > .review
         }
     }
 }
