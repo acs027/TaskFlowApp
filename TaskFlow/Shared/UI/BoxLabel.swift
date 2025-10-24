@@ -12,7 +12,7 @@ struct BoxLabel: View {
     var count: Int? = nil
     var body: some View {
         RoundedRectangle(cornerRadius: 20)
-            .fill(Color(uiColor: UIColor.systemGroupedBackground))
+//            .fill(.) //TODO: background Color
             .overlay(alignment: .topLeading) {
                 Text(title)
                     .bold()

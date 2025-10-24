@@ -18,7 +18,7 @@ struct ConvertToPDFView: View {
     func render() -> URL {
         // 1: Render Hello World with some modifiers
         let renderer = ImageRenderer(content:
-                                        PDFContentView(task: viewModel.task)
+                PDFContentView(task: task)
         )
         
         // 2: Save it to our documents directory

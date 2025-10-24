@@ -10,14 +10,16 @@ import SwiftUI
 struct ReportListView: View {
     @State var viewModel = PDFViewModel()
     var body: some View {
-        List {
-            ForEach(viewModel.pdfFiles, id:\.absoluteString) { file in
-                NavigationLink(file.lastPathComponent) {
-                    PDFDetailView(fileURL: file.absoluteURL, pdfViewModel: viewModel)
+        NavigationStack {
+            List {
+                ForEach(viewModel.pdfFiles, id:\.absoluteString) { file in
+                    NavigationLink(file.lastPathComponent) {
+                        PDFDetailView(fileURL: file.absoluteURL, pdfViewModel: viewModel)
+                    }
                 }
             }
+            .navigationTitle("Reports")
         }
-        .navigationTitle("Reports")
     }
 }
 

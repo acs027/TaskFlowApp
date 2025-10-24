@@ -21,35 +21,37 @@ struct TaskListView: View {
     }
     
     var body: some View {
-        List {
-            ForEach(viewModel.tasks, id:\.id) { task in
-                NavigationLink(destination: TaskDetailView(task: task, context: context)) {
-                    HStack {
-                        Text(task.title)
-                        Spacer()
-                        Text(task.assignedUnit)
-                        Spacer()
-                        Text(task.deadline, style: .relative)
+        NavigationStack {
+            List {
+                ForEach(viewModel.tasks, id:\.id) { task in
+                    NavigationLink(destination: TaskDetailView(task: task, context: context)) {
+                        HStack {
+                            Text(task.title)
+                            Spacer()
+                            Text(task.assignedUnit)
+                            Spacer()
+                            Text(task.deadline, style: .relative)
+                        }
                     }
-                }
-                .listRowBackground(Color.backgroundColor(for: task))
-            }
-        }
-        .navigationTitle("Task List")
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                if userManager.role == .admin {
-                    Button("Add a task", systemImage: "plus") {
-                        isCreating.toggle()
-                    }
-                    .matchedTransitionSource(id: "sheet", in: transition)
+                    .listRowBackground(Color.backgroundColor(for: task))
                 }
             }
-        }
-        
-        .navigationDestination(isPresented: $isCreating) {
-            TaskCreationView(context: context)
-                .navigationTransition(.zoom(sourceID: "sheet", in: transition))
+            .navigationTitle("Task List")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    if userManager.role == .admin {
+                        Button("Add a task", systemImage: "plus") {
+                            isCreating.toggle()
+                        }
+                        .matchedTransitionSource(id: "sheet", in: transition)
+                    }
+                }
+            }
+            
+            .navigationDestination(isPresented: $isCreating) {
+                TaskCreationView(context: context)
+                    .navigationTransition(.zoom(sourceID: "sheet", in: transition))
+            }
         }
         .onAppear {
             viewModel.fetchData()

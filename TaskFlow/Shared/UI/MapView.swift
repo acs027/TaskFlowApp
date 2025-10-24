@@ -11,7 +11,6 @@ import MapKit
 
 struct MapView: View {
     @StateObject var locationManager: LocationManager = LocationManager()
-    //    @State var cameraPosition: MapCameraPosition = .userLocation(followsHeading: true, fallback: .automatic)
     @State var cameraPosition: MapCameraPosition = .userLocation(followsHeading: true, fallback: .automatic)
     @Binding var selectedCoordinate: CLLocationCoordinate2D?
     @State private var dragOffset: CGSize = .zero
@@ -19,12 +18,10 @@ struct MapView: View {
     var body: some View {
         
         MapReader { proxy in
-            //            Map(position: $cameraPosition) {
             Map(position: $cameraPosition) {
                 UserAnnotation()
                 
                 if let selectedCoordinate {
-                    //                Marker(coordinate: selectedCoordinate)
                     Marker("marker", coordinate: selectedCoordinate)
                 }
             }
@@ -33,9 +30,6 @@ struct MapView: View {
                     selectedCoordinate = coordinate
                 }
             }
-            //            .overlay {
-            //                viewOverlay(proxy: proxy)
-            //            }
         }
         .onAppear {
             locationManager.requestPermission()
@@ -50,11 +44,6 @@ struct MapView: View {
     private func viewOverlay(proxy: MapProxy) -> some View {
         Color.clear
             .contentShape(Rectangle())
-        //               .onTapGesture { position in
-        //                   if let coordinate = proxy.convert(position, from: .local) {
-        //                       selectedCoordinate = coordinate
-        //                   }
-        //               }
             .gesture(
                 DragGesture(minimumDistance: 0)
                     .onChanged { gesture in

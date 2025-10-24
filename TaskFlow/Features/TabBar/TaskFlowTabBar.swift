@@ -28,29 +28,27 @@ struct TaskFlowTabBar: View {
                 }
                 .tag(Tab.dashboard)
             
-            NavigationStack {
-                TaskListView(context: context)
-            }
-            .tabItem {
-                Label("Tasks", systemImage: "checklist")
-            }
-            .tag(Tab.tasks)
             
-            Color.clear
+            TaskListView(context: context)
                 .tabItem {
-                    Label("Locations", systemImage: "mappin.and.ellipse")
+                    Label("Tasks", systemImage: "checklist")
+                }
+                .tag(Tab.tasks)
+            
+            UserLocationView()
+                .tabItem {
+                    Label("Location", systemImage: "mappin.and.ellipse")
                 }
                 .tag(Tab.locations)
             
-            NavigationStack {
-                ReportListView()
-            }
+            
+            ReportListView()
                 .tabItem {
                     Label("Reports", systemImage: "doc.text.magnifyingglass")
                 }
                 .tag(Tab.reports)
             
-            Color.clear
+            SettingsView()
                 .tabItem {
                     Label("Settings", systemImage: "gearshape.fill")
                 }

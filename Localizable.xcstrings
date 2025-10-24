@@ -1,6 +1,12 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "%@" : {
+
+    },
+    "%lf" : {
+
+    },
     "%lld" : {
 
     },
@@ -28,10 +34,16 @@
     "Already have an account? " : {
 
     },
+    "Appearance" : {
+
+    },
     "Assigned person/team*" : {
 
     },
     "Assigned unit/person : " : {
+
+    },
+    "Assignment Alerts" : {
 
     },
     "Category" : {
@@ -43,6 +55,9 @@
     "Checklist" : {
 
     },
+    "Checklist Updates" : {
+
+    },
     "Control List" : {
 
     },
@@ -52,10 +67,19 @@
     "Create a Task" : {
 
     },
+    "Current Coordinates" : {
+
+    },
     "Dashboard" : {
 
     },
+    "Data" : {
+
+    },
     "Deadline" : {
+
+    },
+    "Deadline Alerts" : {
 
     },
     "Deadline*" : {
@@ -88,19 +112,52 @@
     "Email" : {
 
     },
+    "Enable Notifications" : {
+
+    },
     "Enter checkist row" : {
 
     },
     "Expand" : {
 
     },
+    "Export / Import JSON" : {
+
+    },
     "Export PDF" : {
 
     },
-    "Locations" : {
+    "Latitude :" : {
+
+    },
+    "Location" : {
+
+    },
+    "Location not available" : {
+
+    },
+    "Longitude :" : {
+
+    },
+    "Manual Sync" : {
 
     },
     "marker" : {
+
+    },
+    "My Location" : {
+
+    },
+    "Notifications" : {
+
+    },
+    "Off" : {
+
+    },
+    "Offline Sync" : {
+
+    },
+    "On" : {
 
     },
     "Ongoing" : {
@@ -110,6 +167,9 @@
 
     },
     "Pasword" : {
+
+    },
+    "Permission :" : {
 
     },
     "Person/Team" : {
@@ -127,10 +187,16 @@
     "Review" : {
 
     },
+    "Role" : {
+
+    },
     "Save" : {
 
     },
     "Select Location" : {
+
+    },
+    "Service : " : {
 
     },
     "Settings" : {
@@ -157,6 +223,12 @@
     "Summary" : {
 
     },
+    "Sync" : {
+
+    },
+    "System Status" : {
+
+    },
     "Task Detail" : {
 
     },
@@ -172,6 +244,9 @@
     "Text" : {
 
     },
+    "Theme" : {
+
+    },
     "Title*" : {
 
     },
@@ -179,6 +254,9 @@
 
     },
     "TODO" : {
+
+    },
+    "User Role" : {
 
     },
     "Video attached: %@" : {

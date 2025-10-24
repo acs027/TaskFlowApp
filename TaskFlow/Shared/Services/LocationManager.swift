@@ -33,6 +33,21 @@ class LocationManager: NSObject, ObservableObject {
     func stopUpdating() {
         manager.stopUpdatingLocation()
     }
+    
+    func authStatus() -> String {
+        switch authorizationStatus {
+        case .notDetermined: "Not determined"
+        case .restricted: "Restricted"
+        case .denied: "Denied"
+        case .authorizedAlways: "Always"
+        case .authorizedWhenInUse: "When in use"
+        @unknown default: "Unknown"
+        }
+    }
+    
+    func isServiceEnabled() -> Bool {
+        return CLLocationManager.locationServicesEnabled()
+    }
 }
 
 extension LocationManager: CLLocationManagerDelegate {
