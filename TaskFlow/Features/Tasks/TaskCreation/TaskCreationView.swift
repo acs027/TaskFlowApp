@@ -9,16 +9,16 @@ import SwiftUI
 import CoreLocation
 import SwiftData
 
-//TODO: Error messages
-
 struct TaskCreationView: View {
     @State private var viewModel: ViewModel
     @State var isMapExpanded: Bool = false
     @State private var mapCoordinate: CLLocationCoordinate2D? = nil
+    let onSave: () -> Void
     
-    init(context: ModelContext) {
+    init(context: ModelContext, onSave: @escaping () -> Void) {
         let viewModel = ViewModel(context: context)
         _viewModel = State(initialValue: viewModel)
+        self.onSave = onSave
     }
     
     var body: some View {
@@ -83,7 +83,6 @@ struct TaskCreationView: View {
                 }
             }
             .pickerStyle(.segmented)
-            //                    TextField("Priority", text: $title)
             TextField("Category", text: $viewModel.category)
             TextField("Control List", text: $viewModel.checkList)
             TextField("Description", text: $viewModel.description)
@@ -92,7 +91,9 @@ struct TaskCreationView: View {
     
     private var saveButton: some View {
         Button("Save") {
-            viewModel.saveTask()
+            viewModel.saveTask {
+                onSave()
+            }
         }
         .buttonStyle(.bordered)
         .buttonSizing(.flexible)
@@ -100,8 +101,8 @@ struct TaskCreationView: View {
         .padding()
     }
 }
-
-#Preview {
-    @Previewable @Environment(\.modelContext) var context
-    TaskCreationView(context: context)
-}
+//
+//#Preview {
+//    @Previewable @Environment(\.modelContext) var context
+//    TaskCreationView(context: context)
+//}

@@ -7,10 +7,6 @@
 
 import Foundation
 
-@Observable
-class UserManager {
-    enum UserRole: String, Codable {
-        case admin, guest
-    }
-    var role: UserRole = .admin
+struct UserManager {
+    static var role: UserRole = UserRole(rawValue: UserDefaults.standard.string(forKey: "userRole") ?? UserRole.technician.rawValue) ?? .technician
 }

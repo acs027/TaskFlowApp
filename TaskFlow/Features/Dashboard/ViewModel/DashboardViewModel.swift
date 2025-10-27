@@ -13,6 +13,13 @@ extension DashboardView {
     class ViewModel {
         var tasks: [TaskItem] = []
         var counts: [TaskState: Int] = [:]
+        private let syncManager: TaskSyncManager
+        let context: ModelContext
+        
+        init(context: ModelContext) {
+            self.context = context
+            self.syncManager = TaskSyncManager(context: context)
+        }
         
         func fetchTaskCounts(context: ModelContext) {
             do {
@@ -34,6 +41,11 @@ extension DashboardView {
         
         func count(for state: TaskState) -> Int {
             counts[state] ?? 0
+        }
+        
+        private func sync() async {
+            await syncManager.syncFirebaseToLocal()
+            await syncManager.syncLocalToFirebase()
         }
     }
 }

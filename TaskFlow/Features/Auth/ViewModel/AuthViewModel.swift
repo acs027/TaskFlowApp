@@ -12,11 +12,24 @@ import GoogleSignInSwift
 import FirebaseCore
 
 
-enum AuthState {
+enum AuthState: Equatable {
     case unauthenticated
     case authenticating
     case authenticated
     case error(String)
+    
+    static func == (lhs: AuthState, rhs: AuthState) -> Bool {
+           switch (lhs, rhs) {
+           case (.unauthenticated, .unauthenticated),
+                (.authenticating, .authenticating),
+                (.authenticated, .authenticated):
+               return true
+           case let (.error(l), .error(r)):
+               return l == r
+           default:
+               return false
+           }
+       }
 }
 
 enum AuthFlow {
@@ -29,6 +42,8 @@ class AuthViewModel {
     var email: String = ""
     var password: String = ""
     var confirmationPassword: String = ""
+    
+    var alertMessage: String?
     
     var authState: AuthState = .unauthenticated
     var authFlow: AuthFlow = .signin
@@ -43,6 +58,10 @@ class AuthViewModel {
         email = ""
         password = ""
         confirmationPassword = ""
+    }
+    
+    func showAlert() {
+        
     }
     
     private func validateSignupFields() -> Bool {
@@ -115,7 +134,7 @@ class AuthViewModel {
     func signin() {
         guard validateSigninFields() else { return }
         authState = .authenticating
-        Auth.auth().createUser(withEmail: email, password: password) { result, error in
+        Auth.auth().signIn(withEmail: email, password: password) { result, error in
             if let error {
                 self.authState = .error(error.localizedDescription)
             } else {

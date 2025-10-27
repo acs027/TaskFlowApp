@@ -8,8 +8,6 @@
 import Foundation
 import SwiftData
 
-
-
 extension TaskDetailView {
     @Observable
     class ViewModel {
@@ -21,6 +19,7 @@ extension TaskDetailView {
         init(task: TaskItem, context: ModelContext) {
             self.task = task
             self.context = context
+            updateMediaURLs()
         }
         
         
@@ -73,5 +72,11 @@ extension TaskDetailView {
         func isChecklistToggleDisabled() -> Bool {
             task.taskState > .review
         }
+    }
+}
+
+extension TaskDetailView.ViewModel {
+    func updateMediaURLs() {
+        MediaURLCorrectionService.updateMediaURL(task: task)
     }
 }

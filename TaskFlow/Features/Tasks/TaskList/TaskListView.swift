@@ -10,7 +10,7 @@ import SwiftData
 
 struct TaskListView: View {
     @Environment(\.modelContext) var context
-    @Environment(UserManager.self) var userManager
+    @Environment(UserPreferences.self) var prefs
     @State var viewModel: ViewModel
     @State var isCreating: Bool = false
     @Namespace var transition
@@ -20,6 +20,7 @@ struct TaskListView: View {
         _viewModel = State(initialValue: viewModel)
     }
     
+    //TODO: SLA Notification
     var body: some View {
         NavigationStack {
             List {
@@ -39,7 +40,7 @@ struct TaskListView: View {
             .navigationTitle("Task List")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    if userManager.role == .admin {
+                    if prefs.userRole == .admin {
                         Button("Add a task", systemImage: "plus") {
                             isCreating.toggle()
                         }
@@ -49,18 +50,17 @@ struct TaskListView: View {
             }
             
             .navigationDestination(isPresented: $isCreating) {
-                TaskCreationView(context: context)
+                TaskCreationView(context: context) {
+                    viewModel.fetchData()
+                    isCreating.toggle()
+                }
                     .navigationTransition(.zoom(sourceID: "sheet", in: transition))
             }
         }
         .onAppear {
             viewModel.fetchData()
         }
-//        .task {
-//            await viewModel.sync()
-//        }
     }
-    
 }
 
 #Preview {

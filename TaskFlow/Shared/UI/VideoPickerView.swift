@@ -29,7 +29,7 @@ struct VideoPickerView: View {
                 .labelStyle(.iconOnly)
                 .frame(width: 50, height: 50)
         }
-        .onChange(of: selectedItem) { newItem in
+        .onChange(of: selectedItem) { oldItem, newItem in
             handlePickedVideo(from: newItem)
         }
     }
@@ -53,7 +53,7 @@ extension VideoPickerView {
             self.taskItem = task
             self.context = context
             // Load existing video if available
-            if let existingItem = taskItem.ongoingContent.first(where: { $0.mediaType == .video }),
+            if let existingItem = taskItem.inProgressContent.first(where: { $0.mediaType == .video }),
                let url = existingItem.mediaURL {
                 self.videoURL = url
             }
@@ -90,7 +90,7 @@ extension VideoPickerView {
                 
                 // Create and save WorkItem in SwiftData
                 let item = WorkItem(text: "My picked video", mediaURL: destination, mediaType: .video)
-                taskItem.ongoingContent.append(item)
+                taskItem.inProgressContent.append(item)
                 try context.save()
                 showSavedMessage = true
                 

@@ -12,18 +12,11 @@ extension TaskListView {
     @Observable
     class ViewModel {
         private let context: ModelContext
-        private let syncManager: TaskSyncManager
         var tasks: [TaskItem] = []
         
         init(context: ModelContext) {
             self.context = context
-            self.syncManager = TaskSyncManager(context: context)
             fetchData()
-        }
-        
-        func loadMockData() {
-//            let task = Task(title: "Task", location: .init(name: "Location", latitude: 100, longitude: 100), deadline: .distantFuture, assignedUnit: "Acs")
-//            tasks.append(task)
         }
         
         func fetchData() {
@@ -34,11 +27,5 @@ extension TaskListView {
                      print("Fetch failed")
                  }
              }
-        
-        func sync() async {
-            await syncManager.syncFirebaseToLocal()
-            await syncManager.syncLocalToFirebase()
-            fetchData()
-        }
     }
 }

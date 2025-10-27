@@ -43,7 +43,7 @@
     "Assigned unit/person : " : {
 
     },
-    "Assignment Alerts" : {
+    "Authentication Error" : {
 
     },
     "Category" : {
@@ -55,13 +55,7 @@
     "Checklist" : {
 
     },
-    "Checklist Updates" : {
-
-    },
     "Control List" : {
-
-    },
-    "Create a task" : {
 
     },
     "Create a Task" : {
@@ -77,9 +71,6 @@
 
     },
     "Deadline" : {
-
-    },
-    "Deadline Alerts" : {
 
     },
     "Deadline*" : {
@@ -157,10 +148,16 @@
     "Offline Sync" : {
 
     },
+    "OK" : {
+
+    },
     "On" : {
 
     },
     "Ongoing" : {
+
+    },
+    "Ongoing Details" : {
 
     },
     "Password" : {
@@ -253,16 +250,10 @@
     "To do" : {
 
     },
-    "TODO" : {
-
-    },
     "User Role" : {
 
     },
     "Video attached: %@" : {
-
-    },
-    "WIP Content" : {
 
     }
   },

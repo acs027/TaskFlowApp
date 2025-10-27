@@ -30,19 +30,26 @@ extension TaskCreationView {
         var isAlertShowing: Bool = false
         var errorMessage: String = ""
         
+        var notificationsEnabled = UserDefaults.standard.bool(forKey: "notificationsEnabled")
+        var notifyOnDeadline = UserDefaults.standard.bool(forKey: "notifyOnDeadline")
+        
         init(context: ModelContext) {
             self.context = context
         }
         
         //TODO: I will figure out how we get checklist while task creation
         //TextEditor Checklist section, cast them CheckListItem with new line seperator
-        func saveTask() {
+        func saveTask(completion: @escaping () -> Void) {
                 if isValid() {
                     do {
                         let item = TaskItem(id: UUID(), title: title, location: location!, deadline: deadline, assignedUnit: assignedUnit, category: category, priority: priority, taskDescription: description, taskState: taskState)
                         context.insert(item)
                         try context.save()
                         print("saved")
+                        if notificationsEnabled && notifyOnDeadline {
+                            NotificationManager.scheduleDeadlineNotification(for: item)
+                        }
+                        completion()
                     } catch {
                         print(error.localizedDescription)
                         

@@ -21,7 +21,7 @@ struct ImagePickerView: View {
                 .labelStyle(.iconOnly)
                 .frame(width: 50, height: 50)
         }
-        .onChange(of: selectedItem) { newItem in
+        .onChange(of: selectedItem) { oldItem ,newItem in
             Task { await handlePickedImage(from: newItem) }
         }
     }
@@ -34,10 +34,10 @@ struct ImagePickerView: View {
                 image = uiImage
                 
                 // Save image to Documents
-                let imageURL = try saveImageToDocuments(uiImage)
-                let workItem = WorkItem(text: "My image", mediaURL: imageURL, mediaType: .image)
-                //                context.insert(workItem)
-                taskItem.ongoingContent.append(workItem)
+                let imageID = UUID()
+                let imageURL = try saveImageToDocuments(uiImage, id: imageID)
+                let workItem = WorkItem(id: imageID, text: "My image", mediaURL: imageURL, mediaType: .image)
+                taskItem.inProgressContent.append(workItem)
                 context.insert(workItem)
                 try context.save()
             }
@@ -46,9 +46,9 @@ struct ImagePickerView: View {
         }
     }
     
-    func saveImageToDocuments(_ image: UIImage) throws -> URL {
+    func saveImageToDocuments(_ image: UIImage, id: UUID) throws -> URL {
         let imageData = image.jpegData(compressionQuality: 0.9)!
-        let fileName = UUID().uuidString + ".jpg"
+        let fileName = id.uuidString + ".jpg"
         let destination = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
             .appendingPathComponent(fileName)
         try imageData.write(to: destination)

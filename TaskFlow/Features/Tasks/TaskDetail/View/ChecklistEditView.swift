@@ -49,8 +49,6 @@ extension TaskDetailView {
                 TextField("Enter checkist row", text: $itemTitle)
                 Button("Add", action: addCheckListItem)
                 Button(role: .cancel) { }
-            } message: {
-                Text("TODO")
             }
         }
         

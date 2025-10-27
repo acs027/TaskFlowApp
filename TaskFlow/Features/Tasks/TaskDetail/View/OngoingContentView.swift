@@ -8,7 +8,7 @@
 import SwiftUI
 import AVKit
 
-struct WIPDetailView: View {
+struct OngoingContentView: View {
     let taskItem: TaskItem
     @State var isItemsExpanded: Bool = false
     @State var offset: CGFloat = 0
@@ -22,13 +22,15 @@ struct WIPDetailView: View {
             Color.clear
             ScrollView {
                 VStack {
-                    ForEach(taskItem.ongoingContent, id:\.id) { media in
+                    ForEach(taskItem.inProgressContent, id:\.id) { media in
                         switch media.mediaType {
                         case .image:
                             AsyncImage(url: media.mediaURL) { image in
-                                image.resizable()
-                                    .frame(height: 50)
+                                image
+                                    .resizable()
                                     .scaledToFit()
+                                    .frame(height: 50)
+                                    
                             } placeholder: {
                                 Color.clear
                                     .frame(height: 50)
@@ -45,7 +47,7 @@ struct WIPDetailView: View {
             }
             addContentButton
         }
-        .navigationTitle("WIP Content")
+        .navigationTitle("Ongoing Details")
         .sheet(isPresented: $isEditingText) {
             VStack {
                 TextEditor(text: $textContent)
@@ -56,7 +58,7 @@ struct WIPDetailView: View {
                 Spacer()
                 Button("Add") {
                     let item = WorkItem(text: textContent, mediaType: .text)
-                    taskItem.ongoingContent.append(item)
+                    taskItem.inProgressContent.append(item)
                     isEditingText.toggle()
                 }
             }
@@ -120,7 +122,7 @@ struct WIPDetailView: View {
 
 #Preview {
     NavigationStack{
-        WIPDetailView(taskItem: TaskItem.mock)
+        OngoingContentView(taskItem: TaskItem.mock)
     }
 }
 

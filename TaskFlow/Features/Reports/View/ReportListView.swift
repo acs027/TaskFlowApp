@@ -18,6 +18,9 @@ struct ReportListView: View {
                     }
                 }
             }
+            .refreshable {
+                viewModel.loadPdfFiles()
+            }
             .navigationTitle("Reports")
         }
     }

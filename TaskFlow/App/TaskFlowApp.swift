@@ -7,11 +7,12 @@
 
 import SwiftUI
 import SwiftData
+import UserNotifications
 
 @main
 struct TaskFlowApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-    @State var userManager = UserManager()
+    
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             TaskItem.self,
@@ -24,12 +25,17 @@ struct TaskFlowApp: App {
             fatalError("Could not create ModelContainer: \(error)")
         }
     }()
+    
+    
+    
+    init() {
+        NotificationManager.requestPermission()
+       }
 
     var body: some Scene {
         WindowGroup {
-//            TaskFlowTabBar()
             AuthView()
-                .environment(userManager)
+                .environment(UserPreferences.shared)
         }
         .modelContainer(sharedModelContainer)
     }

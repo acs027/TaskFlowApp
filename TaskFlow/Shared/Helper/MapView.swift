@@ -36,7 +36,7 @@ struct MapView: View {
         }
         .onChange(of: locationManager.userLocation != nil) { oldValue, newValue in
             if let location = locationManager.userLocation {
-                selectedCoordinate = locationManager.userLocation
+                selectedCoordinate = location
             }
         }
     }

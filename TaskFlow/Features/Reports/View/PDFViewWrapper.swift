@@ -21,5 +21,12 @@ struct PDFViewWrapper: UIViewRepresentable {
     
     func updateUIView(_ uiView: PDFView, context: Context) {
         uiView.document = PDFDocument(url: fileURL)
+        let page = uiView.document?.page(at: 0)
+//        let page = pdfDocument?.page(at: 0)
+
+        // Create signature annotation
+        let signature = PDFAnnotation(bounds: CGRect(x: 100, y: 100, width: 200, height: 50), forType: .widget, withProperties: nil)
+        signature.widgetFieldType = .signature
+        page?.addAnnotation(signature)
     }
 }

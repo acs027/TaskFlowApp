@@ -10,10 +10,8 @@ import SwiftData
 
 struct DashboardView: View {
     @Environment(\.modelContext) var context
-    @Environment(UserManager.self) var userManager
     @Binding var selectedTab: TaskFlowTabBar.Tab
-    @State var viewModel: ViewModel = ViewModel()
-    @State var isCreating: Bool = false
+    @State var viewModel: ViewModel?
     
     var body: some View {
         NavigationStack {
@@ -22,30 +20,29 @@ struct DashboardView: View {
                 shortcutsSection
              
                 Spacer()
-                if userManager.role == .admin {
-                    createButton
-                }
             }
             .navigationTitle("Summary")
-            .navigationDestination(isPresented: $isCreating) {
-                TaskCreationView(context: context)
-            }
         }
         .onAppear {
-            viewModel.fetchTaskCounts(context: context)
+            if viewModel == nil {
+                viewModel = ViewModel(context: context)
+            }
         }
     }
     
+    @ViewBuilder
     private var summarySection: some View {
-        Section{
-            VStack {
-                HStack {
-                    BoxLabel(title: "Waiting", count: viewModel.count(for: .initial))
-                             BoxLabel(title: "Ongoing", count: viewModel.count(for: .ongoing))
-                             BoxLabel(title: "Complete", count: viewModel.count(for: .completed))
+        if let viewModel {
+            Section{
+                VStack {
+                    HStack {
+                        BoxLabel(title: "Waiting", count: viewModel.count(for: .initial))
+                                 BoxLabel(title: "Ongoing", count: viewModel.count(for: .ongoing))
+                                 BoxLabel(title: "Complete", count: viewModel.count(for: .completed))
+                    }
+                    .frame(height: 100)
+                    .padding(.horizontal)
                 }
-                .frame(height: 100)
-                .padding(.horizontal)
             }
         }
     }
@@ -78,12 +75,6 @@ struct DashboardView: View {
                 .frame(height: 150)
                 .padding(.horizontal)
             }
-        }
-    }
-    
-    private var createButton: some View {
-        Button("Create a task", systemImage: "plus") {
-            isCreating.toggle()
         }
     }
 }

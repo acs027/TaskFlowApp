@@ -8,8 +8,14 @@
 import Foundation
 import Observation
 
+enum UserRole: String, CaseIterable, Identifiable {
+    case admin = "Admin"
+    case technician = "Technician"
+    var id: String { rawValue }
+}
+
 @Observable
-class UserPreferences {
+final class UserPreferences {
     // MARK: - Enums
     enum Theme: String, CaseIterable, Identifiable {
         case system = "System"
@@ -30,32 +36,22 @@ class UserPreferences {
         case off = "Off"
         var id: String { rawValue }
     }
-
-    enum UserRole: String, CaseIterable, Identifiable {
-        case admin = "Admin"
-        case technician = "Technician"
-        var id: String { rawValue }
-    }
-
+    
+    static let shared = UserPreferences()
+    
     // MARK: - Properties
     var theme: Theme
     var offlineSync: OfflineSyncMode
     var manualSync: ManualSync
     var notificationsEnabled: Bool
-    var notifyOnDeadline: Bool
-    var notifyOnAssignment: Bool
-    var notifyOnChecklistChange: Bool
     var userRole: UserRole
 
     // MARK: - Init
-    init() {
+    private init() {
         theme = Theme(rawValue: UserDefaults.standard.string(forKey: "theme") ?? Theme.system.rawValue) ?? .system
         offlineSync = OfflineSyncMode(rawValue: UserDefaults.standard.string(forKey: "offlineSync") ?? OfflineSyncMode.wifiOnly.rawValue) ?? .wifiOnly
         manualSync = ManualSync(rawValue: UserDefaults.standard.string(forKey: "manualSync") ?? ManualSync.off.rawValue) ?? .off
         notificationsEnabled = UserDefaults.standard.bool(forKey: "notificationsEnabled")
-        notifyOnDeadline = UserDefaults.standard.bool(forKey: "notifyOnDeadline")
-        notifyOnAssignment = UserDefaults.standard.bool(forKey: "notifyOnAssignment")
-        notifyOnChecklistChange = UserDefaults.standard.bool(forKey: "notifyOnChecklistChange")
         userRole = UserRole(rawValue: UserDefaults.standard.string(forKey: "userRole") ?? UserRole.technician.rawValue) ?? .technician
     }
 
@@ -66,9 +62,17 @@ class UserPreferences {
         defaults.set(offlineSync.rawValue, forKey: "offlineSync")
         defaults.set(manualSync.rawValue, forKey: "manualSync")
         defaults.set(notificationsEnabled, forKey: "notificationsEnabled")
-        defaults.set(notifyOnDeadline, forKey: "notifyOnDeadline")
-        defaults.set(notifyOnAssignment, forKey: "notifyOnAssignment")
-        defaults.set(notifyOnChecklistChange, forKey: "notifyOnChecklistChange")
         defaults.set(userRole.rawValue, forKey: "userRole")
+        print("Preferences Saved!")
+    }
+}
+
+extension UserPreferences: Equatable {
+    static func == (lhs: UserPreferences, rhs: UserPreferences) -> Bool {
+        lhs.theme == rhs.theme &&
+        lhs.offlineSync == rhs.offlineSync &&
+        lhs.manualSync == rhs.manualSync &&
+        lhs.notificationsEnabled == rhs.notificationsEnabled &&
+        lhs.userRole == rhs.userRole
     }
 }

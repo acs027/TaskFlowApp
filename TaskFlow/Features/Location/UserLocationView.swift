@@ -14,7 +14,7 @@ struct UserLocationView: View {
         NavigationStack {
             Form {
                 Section("Current Coordinates") {
-                    if let location = viewModel.locationManager.userLocation {
+                    if viewModel.locationManager.userLocation != nil {
                         HStack {
                             Text("Latitude :")
                                 .bold()

@@ -10,7 +10,7 @@ import SwiftData
 import AVKit
 
 struct TaskDetailView: View {
-    @Environment(UserManager.self) var userManager
+    @Environment(UserPreferences.self) var prefs
     @State var viewModel: ViewModel
     @State var isEditingTodo: Bool = false
     @State var isEditingReview: Bool = false
@@ -39,7 +39,7 @@ struct TaskDetailView: View {
             ChecklistEditView(viewModel: $viewModel)
         }
         .navigationDestination(isPresented: $isEditingOngoingContent, destination: {
-            WIPDetailView(taskItem: viewModel.task)
+            OngoingContentView(taskItem: viewModel.task)
         })
         .sheet(isPresented: $isEditingTodo) {
             TodoEditView(viewModel: $viewModel)
@@ -66,7 +66,7 @@ struct TaskDetailView: View {
                     .bold()
                     .frame(height: 20)
                 Spacer()
-                if userManager.role == .admin {
+                if prefs.userRole == .admin {
                     Button("Edit") {
                         isEditingTodo.toggle()
                     }
@@ -113,7 +113,7 @@ struct TaskDetailView: View {
                     }
                 }
                 Divider()
-                ForEach(viewModel.task.ongoingContent, id:\.id) { media in
+                ForEach(viewModel.task.inProgressContent, id:\.id) { media in
                     switch media.mediaType {
                     case .image:
                         AsyncImage(url: media.mediaURL) { image in
@@ -123,6 +123,7 @@ struct TaskDetailView: View {
                             Color.blue
                                 .frame(width: 50, height: 50)
                         }
+                       
                     case .text:
                         Text(media.text ?? "")
                     case .video:
@@ -146,7 +147,7 @@ struct TaskDetailView: View {
                     .bold()
                     .frame(height: 20)
                 Spacer()
-                if userManager.role == .admin {
+                if prefs.userRole == .admin {
                     Button("Edit") {
                         isEditingReview.toggle()
                     }
@@ -181,7 +182,6 @@ struct TaskDetailView: View {
     return TabView {
         NavigationStack {
             TaskDetailView(task: mockTask, context: container.mainContext)
-                .environment(userManager)
         }
     }
     .modelContainer(container)

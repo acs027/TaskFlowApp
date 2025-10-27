@@ -13,11 +13,11 @@ extension Color {
         let timeInterval = task.deadline.timeIntervalSince(now)
         
         if timeInterval < 0 {
-            return Color.red.opacity(0.4) // overdue
+            return Color.red.opacity(0.8) // overdue
         } else if timeInterval < 24 * 60 * 60 { // within 1 day
-            return Color.red.opacity(0.3)
+            return Color.red.opacity(0.5)
         } else if timeInterval < 3 * 24 * 60 * 60 { // within 3 days
-            return Color.orange.opacity(0.2)
+            return Color.orange.opacity(0.3)
         } else {
             return Color.clear
         }

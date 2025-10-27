@@ -28,9 +28,7 @@ class TaskItem: Identifiable {
     var taskState: TaskState
     
     @Relationship(deleteRule: .cascade)
-    var ongoingContent: [WorkItem] = []
-    
-    
+    var inProgressContent: [WorkItem] = []
     
     init(id: UUID,
          title: String,
@@ -41,7 +39,7 @@ class TaskItem: Identifiable {
          priority: Priority? = nil,
          taskDescription: String,
          taskState: TaskState,
-         workInProgress: [WorkItem] = [],
+         inProgressContent: [WorkItem] = [],
          checklist: [ChecklistItem] = []) {
         self.id = id
         self.title = title
@@ -52,7 +50,7 @@ class TaskItem: Identifiable {
         self.priority = priority
         self.taskDescription = taskDescription
         self.taskState = taskState
-        self.ongoingContent = workInProgress
+        self.inProgressContent = inProgressContent
         self.checklist = checklist
     }
 }
@@ -63,7 +61,7 @@ class ChecklistItem: Identifiable {
     var title: String
     var isChecked: Bool
     
-    @Relationship(inverse: \TaskItem.ongoingContent)
+    @Relationship(inverse: \TaskItem.checklist)
     var task: TaskItem?
     
     init(title: String, isChecked: Bool = false, task: TaskItem? = nil) {
@@ -90,21 +88,23 @@ class Location: Identifiable {
 
 @Model
 class WorkItem: Identifiable {
-    var id: UUID = UUID()
+    var id: UUID
     var text: String?
     var mediaURL: URL?
     var mediaType: MediaType
     
     // relationship
-    @Relationship(inverse: \TaskItem.ongoingContent)
+    @Relationship(inverse: \TaskItem.inProgressContent)
     var task: TaskItem?
     
     init(
+        id: UUID = UUID(),
         text: String? = nil,
         mediaURL: URL? = nil,
         mediaType: MediaType = .text,
         task: TaskItem? = nil
     ) {
+        self.id = id
         self.text = text
         self.mediaURL = mediaURL
         self.mediaType = mediaType
@@ -150,7 +150,7 @@ extension TaskItem {
             priority: .high,
             taskDescription: "Install and test the main control panel in Zone A. Ensure all connections are secure and labeled.",
             taskState: .ongoing,
-            workInProgress: [note, photo, video],
+            inProgressContent: [note, photo, video],
             checklist: [ChecklistItem(title: "item", isChecked: false), ChecklistItem(title: "item", isChecked: false)],
         )
     }

@@ -37,7 +37,7 @@ final class TaskSyncManager {
             "isChecked": $0.isChecked
         ]}
 
-        let workData = task.ongoingContent.map { [
+        let workData = task.inProgressContent.map { [
             "id": $0.id.uuidString,
             "text": $0.text ?? "",
             "mediaURL": $0.mediaURL?.absoluteString ?? "",
@@ -51,7 +51,7 @@ final class TaskSyncManager {
             "assignedUnit": task.assignedUnit,
             "category": task.category ?? "",
             "priority": task.priority?.rawValue ?? "",
-            "taskDescription": task.taskDescription ?? "",
+            "taskDescription": task.taskDescription,
             "taskState": task.taskState.rawValue,
             "location": [
                 "name": task.location.name,
@@ -122,7 +122,7 @@ final class TaskSyncManager {
                 existing.priority = Priority(rawValue: doc["priority"] as? String ?? "")
                 existing.taskDescription = doc["taskDescription"] as? String ?? ""
                 existing.checklist = checklistItems
-                existing.ongoingContent = workItems
+                existing.inProgressContent = workItems
             } else {
                 let newTask = TaskItem(
                     id: id,
@@ -134,7 +134,7 @@ final class TaskSyncManager {
                     priority: Priority(rawValue: doc["priority"] as? String ?? ""),
                     taskDescription: doc["taskDescription"] as? String ?? "",
                     taskState: taskState,
-                    workInProgress: workItems,
+                    inProgressContent: workItems,
                     checklist: checklistItems
                 )
                 context.insert(newTask)
