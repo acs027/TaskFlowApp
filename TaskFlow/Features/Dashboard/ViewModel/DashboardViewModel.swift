@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftData
+import Network
 
 extension DashboardView {
     @Observable
@@ -15,6 +16,8 @@ extension DashboardView {
         var counts: [TaskState: Int] = [:]
         private let syncManager: TaskSyncManager
         let context: ModelContext
+        
+        var isSyncing: Bool = false
         
         init(context: ModelContext) {
             self.context = context
@@ -45,8 +48,23 @@ extension DashboardView {
         }
         
         func sync() async {
+            isSyncing = true
             await syncManager.syncFirebaseToLocal()
             await syncManager.syncLocalToFirebase()
+            isSyncing = false
+        }
+        
+        
+        func checkForSync(for type: NWInterface.InterfaceType?, isConnected: Bool?) async {
+            
+            if let type, let isConnected {
+                let storedValue = UserDefaults.standard.string(forKey: "offlineSync")
+                let offlineSyncMode = OfflineSyncMode(rawValue: storedValue ?? "") ?? .off
+                if offlineSyncMode.types().contains(type) {
+                            await sync()
+                        
+                }
+            }
         }
     }
 }

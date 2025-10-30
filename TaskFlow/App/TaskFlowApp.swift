@@ -11,6 +11,7 @@ import SwiftData
 @main
 struct TaskFlowApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    @StateObject private var networkMonitor = NetworkMonitor()
     
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
@@ -34,6 +35,8 @@ struct TaskFlowApp: App {
     var body: some Scene {
         WindowGroup {
             AuthView()
+                .environment(\.isNetworkConnected, networkMonitor.isConnected)
+                .environment(\.connectionType, networkMonitor.connectionType)
         }
         .modelContainer(sharedModelContainer)
     }

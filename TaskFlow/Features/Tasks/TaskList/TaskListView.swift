@@ -24,30 +24,20 @@ struct TaskListView: View {
     var body: some View {
         NavigationStack {
             List {
-                ForEach(viewModel.tasks, id:\.id) { task in
+                ForEach(viewModel.remainingTasks, id:\.id) { task in
                     NavigationLink(destination: TaskDetailView(task: task, context: context)) {
-                        HStack {
-                            VStack {
-                                Text("Title :")
-                                    .font(.caption)
-                                Text(task.title)
-                            }
-                            Spacer()
-                            VStack {
-                                Text("Assigned to :")
-                                    .font(.caption)
-                                Text(task.assignedUnit)
-                            }
-                            Spacer()
-                            VStack {
-                                Text("Deadline :")
-                                    .font(.caption)
-                                Text(task.deadline, style: .relative)
-                            }
-                            
-                        }
+                       TaskRowLabel(task: task)
                     }
                     .listRowBackground(Color.backgroundColor(for: task))
+                }
+                
+                Section("Completed") {
+                    ForEach(viewModel.completedTasks, id:\.id) { task in
+                        NavigationLink(destination: TaskDetailView(task: task, context: context)) {
+                           TaskRowLabel(task: task)
+                        }
+                        .listRowBackground(Color.green)
+                    }
                 }
             }
             .navigationTitle("Task List")
@@ -80,5 +70,7 @@ struct TaskListView: View {
     @Previewable @Environment(\.modelContext) var context
     TaskListView(context: context)
 }
+
+
 
 

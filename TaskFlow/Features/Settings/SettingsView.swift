@@ -22,7 +22,7 @@ struct SettingsView: View {
                 syncSection
                 notificationSection
                 roleSection
-                exportSection
+//                exportSection
                 logoutSection
             }
             .navigationTitle("Settings")

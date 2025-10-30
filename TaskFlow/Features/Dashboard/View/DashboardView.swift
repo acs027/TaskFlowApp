@@ -8,10 +8,14 @@
 import SwiftUI
 import SwiftData
 
+
 struct DashboardView: View {
     @Environment(\.modelContext) var context
+    @Environment(\.isNetworkConnected) var isNetworkConnected
+    @Environment(\.connectionType) var connectionType
     @Binding var selectedTab: TaskFlowTabBar.Tab
     @State var viewModel: ViewModel?
+    @AppStorage("manualSync") var manualSyncRawValue: String = ManualSync.off.rawValue
     
     var body: some View {
         NavigationStack {
@@ -24,8 +28,25 @@ struct DashboardView: View {
                     
                     Spacer()
                 }
+                
+                if let viewModel, viewModel.isSyncing {
+                    SyncLoadingView()
+                }
             }
             .navigationTitle("Summary")
+            .toolbar {
+                if manualSyncRawValue == "On", let viewModel {
+                    ToolbarItem {
+                        Button("Sync", systemImage: "arrow.trianglehead.2.clockwise.rotate.90.circle") {
+                            Task {
+                                await viewModel.sync()
+                            }
+                        }
+                        .tint(isNetworkConnected ?? false ? .none : .red)
+                        .disabled(isNetworkConnected != true)
+                    }
+                }
+            }
         }
         .onAppear {
             if viewModel == nil {
@@ -38,9 +59,16 @@ struct DashboardView: View {
                 viewModel.fetchTaskCounts()
             }
         }
+        .onChange(of: connectionType, { oldValue, newValue in
+            if let viewModel {
+                Task {
+                    await viewModel.checkForSync(for: newValue, isConnected: isNetworkConnected)
+                }
+            }
+        })
         .task {
             if let viewModel {
-                await viewModel.sync()
+                await viewModel.checkForSync(for: connectionType, isConnected: isNetworkConnected)
             }
         }
     }
@@ -50,7 +78,7 @@ struct DashboardView: View {
         if let viewModel {
             VStack {
                 HStack {
-                    BoxLabel(title: "Waiting", count: viewModel.count(for: .initial))
+                    BoxLabel(title: "Waiting", count: viewModel.count(for: .planned))
                     BoxLabel(title: "Ongoing", count: viewModel.count(for: .ongoing))
                     BoxLabel(title: "Complete", count: viewModel.count(for: .completed))
                 }

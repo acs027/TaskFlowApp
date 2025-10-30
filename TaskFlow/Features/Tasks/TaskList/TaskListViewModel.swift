@@ -14,6 +14,14 @@ extension TaskListView {
         private let context: ModelContext
         var tasks: [TaskItem] = []
         
+        var completedTasks: [TaskItem] {
+            tasks.filter({ $0.taskState == .completed })
+        }
+        
+        var remainingTasks: [TaskItem] {
+            tasks.filter({$0.taskState != .completed})
+        }
+        
         init(context: ModelContext) {
             self.context = context
             fetchData()

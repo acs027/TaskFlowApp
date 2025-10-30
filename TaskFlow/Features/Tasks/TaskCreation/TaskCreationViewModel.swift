@@ -17,7 +17,7 @@ extension TaskCreationView {
         var location: Location?
         var deadline: Date = .now
         var assignedUnit: String = ""
-        var taskState: TaskState = .initial
+        var taskState: TaskState = .planned
         
         // Optionals
         var category: String = ""

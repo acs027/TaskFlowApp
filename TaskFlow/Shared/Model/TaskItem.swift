@@ -164,7 +164,7 @@ extension TaskItem {
             "Upgrade existing installations to improve efficiency."
         ]
         
-        let states: [TaskState] = [.planned, .initial, .ongoing]
+        let states: [TaskState] = [.todo, .planned, .ongoing]
         let priorities: [Priority] = [.low, .medium, .high]
         
         return (1...20).map { i in

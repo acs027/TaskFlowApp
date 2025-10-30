@@ -9,8 +9,8 @@ import Foundation
 import SwiftUI
 
 enum TaskState: String, Codable, CaseIterable, Identifiable, Comparable {
-    case initial = "Start"
     case planned = "Planned"
+    case todo = "To do"
     case ongoing = "Ongoing"
     case review = "Review"
     case completed = "Completed"
@@ -19,9 +19,9 @@ enum TaskState: String, Codable, CaseIterable, Identifiable, Comparable {
     
     var nextStep: Self {
         switch self {
-        case .initial:
-                .planned
         case .planned:
+                .todo
+        case .todo:
                 .ongoing
         case .ongoing:
                 .review
@@ -33,7 +33,7 @@ enum TaskState: String, Codable, CaseIterable, Identifiable, Comparable {
     }
     
     static func < (lhs: TaskState, rhs: TaskState) -> Bool {
-         let order: [TaskState] = [.initial, .planned, .ongoing, .review, .completed]
+         let order: [TaskState] = [.planned, .todo, .ongoing, .review, .completed]
          return order.firstIndex(of: lhs)! < order.firstIndex(of: rhs)!
      }
 }

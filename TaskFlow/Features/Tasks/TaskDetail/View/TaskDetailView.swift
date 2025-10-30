@@ -40,13 +40,13 @@ struct TaskDetailView: View {
         .sheet(isPresented: $isEditingTodo) {
             TodoEditView(viewModel: $viewModel)
         }
-        .navigationTitle("Task Detail")
+        .navigationTitle(viewModel.task.title)
     }
     
     private var taskState: some View {
         HStack {
             ForEach(TaskState.allCases, id:\.id) { state in
-                if state != .initial && state != .completed {
+                if state != .completed {
                     TaskStateLabel(taskState: state, currentState: viewModel.task.taskState)
                 }
             }
@@ -162,12 +162,13 @@ struct TaskDetailView: View {
     
     @ViewBuilder
     private var completedSection: some View {
-            Section {
-                Text(TaskState.completed.rawValue)
-                    .bold()
-                    .frame(height: 50)
+        if viewModel.task.taskState == .completed {
+                Section {
+                    Text(TaskState.completed.rawValue)
+                        .bold()
+                        .frame(height: 50)
+                }
             }
-            .opacity(viewModel.task.taskState == .completed ? 1 : 0)
     }
     
     private func changeStatus() {

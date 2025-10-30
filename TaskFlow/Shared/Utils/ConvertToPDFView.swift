@@ -10,9 +10,18 @@ import PDFKit
 
 struct ConvertToPDFView: View {
     @State var task: TaskItem
+    @State private var pdfURL: URL?
     
     var body: some View {
-        ShareLink("Export PDF", item: render())
+        VStack {
+            if let pdfURL {
+                ShareLink("Export PDF", item: pdfURL)
+            } else {
+                Button("Generate PDF") {
+                    pdfURL = render()
+                }
+            }
+        }
     }
     
     func render() -> URL {
