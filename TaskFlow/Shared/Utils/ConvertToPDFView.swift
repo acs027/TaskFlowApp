@@ -22,7 +22,10 @@ struct ConvertToPDFView: View {
         )
         
         // 2: Save it to our documents directory
-        let url = URL.documentsDirectory.appending(path: "output.pdf")
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyyMMdd_HHmm"
+        let fileName = "\(task.title)_\(formatter.string(from: Date()))"
+        let url = URL.documentsDirectory.appending(path: "\(fileName).pdf")
         
         // 3: Start the rendering process
         renderer.render { size, context in

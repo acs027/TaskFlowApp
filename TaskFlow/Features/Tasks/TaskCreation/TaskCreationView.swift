@@ -11,8 +11,9 @@ import SwiftData
 
 struct TaskCreationView: View {
     @State private var viewModel: ViewModel
-    @State var isMapExpanded: Bool = false
+    @State private var isShowingLocationPicker = false
     @State private var mapCoordinate: CLLocationCoordinate2D? = nil
+    @AppStorage("notificationsEnabled") var notificationsEnabled: Bool = false
     let onSave: () -> Void
     
     init(context: ModelContext, onSave: @escaping () -> Void) {
@@ -41,8 +42,11 @@ struct TaskCreationView: View {
                 additionalSection
                 
             }
-          saveButton
+          
         }
+        .safeAreaInset(edge: .bottom, content: {
+            saveButton
+        })
         .alert(viewModel.errorMessage, isPresented: $viewModel.isAlertShowing) { }
         .navigationTitle("Create a Task")
         .onChange(of: mapCoordinate != nil) { oldValue, newValue in
@@ -51,25 +55,31 @@ struct TaskCreationView: View {
                 viewModel.location = location
             }
         }
+        .sheet(isPresented: $isShowingLocationPicker) {
+                  MapSearchView(selectedCoordinate: $mapCoordinate)
+              }
     }
     
     private var locationSection: some View {
-        Section {
-            // Tap to expand/collapse
-            Button(action: { isMapExpanded.toggle() }) {
+        Section("Location*") {
+            Button {
+                isShowingLocationPicker = true
+            } label: {
                 HStack {
                     Text("Select Location")
                     Spacer()
-                    Image(systemName: isMapExpanded ? "chevron.up" : "chevron.down")
+                    Image(systemName: "map.fill")
                 }
             }
             
-            // Map appears when expanded
-            if isMapExpanded {
-                MapView(selectedCoordinate: $mapCoordinate)
-                    .frame(height: 250)
-                    .cornerRadius(10)
-                    .padding(.vertical, 4)
+            if let coordinate = mapCoordinate {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Latitude: \(coordinate.latitude, specifier: "%.5f")")
+                    Text("Longitude: \(coordinate.longitude, specifier: "%.5f")")
+                }
+                .font(.footnote)
+                .foregroundColor(.secondary)
+                .padding(.top, 4)
             }
         }
     }
@@ -91,7 +101,7 @@ struct TaskCreationView: View {
     
     private var saveButton: some View {
         Button("Save") {
-            viewModel.saveTask {
+            viewModel.saveTask(isNotificationOn: notificationsEnabled) {
                 onSave()
             }
         }
@@ -101,8 +111,8 @@ struct TaskCreationView: View {
         .padding()
     }
 }
-//
-//#Preview {
-//    @Previewable @Environment(\.modelContext) var context
-//    TaskCreationView(context: context)
-//}
+
+#Preview {
+    @Previewable @Environment(\.modelContext) var context
+    TaskCreationView(context: context, onSave: { })
+}

@@ -10,7 +10,7 @@ import Foundation
 
 // The media folder path in simulator changes on every run. This service modify the media url path according to new app folder path.
 struct MediaURLCorrectionService {
-   static func updateMediaURL(task: TaskItem) {
+    static func updateMediaURL(task: TaskItem) {
         let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
 
         for workItem in task.inProgressContent {

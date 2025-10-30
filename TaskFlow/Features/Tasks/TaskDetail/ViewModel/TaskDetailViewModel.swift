@@ -15,6 +15,7 @@ extension TaskDetailView {
         let context: ModelContext
         var processState: ProcessState = .done
         var errorMessage: String?
+        let supabaseManager = SupabaseManager.shared
         
         init(task: TaskItem, context: ModelContext) {
             self.task = task
@@ -77,6 +78,10 @@ extension TaskDetailView {
 
 extension TaskDetailView.ViewModel {
     func updateMediaURLs() {
-        MediaURLCorrectionService.updateMediaURL(task: task)
+        Task
+        {
+            MediaURLCorrectionService.updateMediaURL(task: task)
+            await supabaseManager.syncMedia(for: task.inProgressContent)
+        }
     }
 }

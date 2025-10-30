@@ -12,19 +12,27 @@ extension TaskDetailView {
     struct TodoEditView: View {
         @Environment(\.dismiss) var dismiss
         @Binding var viewModel: ViewModel
+        @State var textfield: String = ""
         
         var body: some View {
             VStack {
-                TextEditor(text: $viewModel.task.taskDescription)
+                SheetControlButtons(buttonTitle: "Save") {
+                    viewModel.task.taskDescription = textfield
+                    viewModel.save()
+                    dismiss()
+                }
+                TextEditor(text: $textfield)
                         .border(.secondary)
                         .padding()
                         .padding()
                 .navigationTitle("Editing todo")
                 Spacer()
-                Button("Save") {
-                    viewModel.save()
-                    dismiss()
-                }
+            }
+            .onAppear {
+                textfield = viewModel.task.taskDescription
+            }
+            .onDisappear {
+                textfield = ""
             }
         }
     }

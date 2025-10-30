@@ -32,7 +32,9 @@ struct NotificationManager {
         content.sound = .default
 
         // Fire 30 minutes before deadline
-        let triggerDate = task.deadline.addingTimeInterval(-30 * 60)
+//        let triggerDate = task.deadline.addingTimeInterval(-1 * 60)
+        //TODO:
+        let triggerDate = Date.now.addingTimeInterval(1 * 60)
         let trigger = UNCalendarNotificationTrigger(
             dateMatching: Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: triggerDate),
             repeats: false

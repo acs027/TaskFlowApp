@@ -129,16 +129,6 @@ extension TaskItem {
             mediaType: .text
         )
         
-        let photo = WorkItem(
-            mediaURL: URL(string: "https://example.com/panel_photo.jpg"),
-            mediaType: .image
-        )
-        
-        let video = WorkItem(
-            mediaURL: URL(string: "https://example.com/installation_video.mp4"),
-            mediaType: .video
-        )
-        
         // Build the task
         return TaskItem(
             id: UUID(),
@@ -150,9 +140,64 @@ extension TaskItem {
             priority: .high,
             taskDescription: "Install and test the main control panel in Zone A. Ensure all connections are secure and labeled.",
             taskState: .ongoing,
-            inProgressContent: [note, photo, video],
-            checklist: [ChecklistItem(title: "item", isChecked: false), ChecklistItem(title: "item", isChecked: false)],
+            inProgressContent: [note],
+            checklist: [ChecklistItem(title: "Main control panel installed", isChecked: false), ChecklistItem(title: "Connections safe", isChecked: false)],
         )
+    }
+    
+    static var mockData: [TaskItem] {
+        let locations = [
+            Location(name: "Main Plant - Zone A", latitude: 40.9923, longitude: 29.1244),
+            Location(name: "Warehouse B", latitude: 41.0123, longitude: 28.9544),
+            Location(name: "Cooling Tower", latitude: 40.9982, longitude: 29.1320),
+            Location(name: "Fuel Station", latitude: 41.0221, longitude: 28.9831),
+            Location(name: "Security Gate", latitude: 40.9910, longitude: 29.1185)
+        ]
+        
+        let categories = ["Inspection", "Maintenance", "Repair", "Installation", "Upgrade"]
+        let units = ["Electrical", "Mechanical", "Instrumentation", "Civil Works", "Operations"]
+        let descriptions = [
+            "Inspect the designated area and report findings.",
+            "Perform maintenance on listed equipment.",
+            "Repair or replace defective components.",
+            "Install new systems as per the design specs.",
+            "Upgrade existing installations to improve efficiency."
+        ]
+        
+        let states: [TaskState] = [.planned, .initial, .ongoing]
+        let priorities: [Priority] = [.low, .medium, .high]
+        
+        return (1...20).map { i in
+            let location = locations.randomElement()!
+            let category = categories.randomElement()!
+            let unit = units.randomElement()!
+            let desc = descriptions.randomElement()!
+            let state = states.randomElement()!
+            let priority = priorities.randomElement()!
+            
+            let checklist = [
+                ChecklistItem(title: "Safety check complete", isChecked: false),
+                ChecklistItem(title: "Work permit verified", isChecked: false),
+                ChecklistItem(title: "Supervisor notified", isChecked: false)
+            ]
+            
+            let workItems: [WorkItem] = [
+            ]
+            
+            return TaskItem(
+                id: UUID(),
+                title: "\(category) Task #\(i)",
+                location: location,
+                deadline: Calendar.current.date(byAdding: .day, value: Int.random(in: 1...14), to: Date())!,
+                assignedUnit: unit,
+                category: category,
+                priority: priority,
+                taskDescription: desc,
+                taskState: state,
+                inProgressContent: workItems,
+                checklist: checklist
+            )
+        }
     }
 }
 

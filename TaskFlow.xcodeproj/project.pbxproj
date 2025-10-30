@@ -25,7 +25,7 @@
 		089713912EA97809003AE524 /* Exceptions for "TaskFlow" folder in "TaskFlow" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Info.plist,
+				Shared/Resources/Info.plist,
 			);
 			target = 089712CD2EA497DF003AE524 /* TaskFlow */;
 		};
@@ -302,7 +302,7 @@
 				DEVELOPMENT_TEAM = DDYV9BM2N2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = TaskFlow/Info.plist;
+				INFOPLIST_FILE = TaskFlow/Shared/Resources/Info.plist;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Need location to app perform";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -337,7 +337,7 @@
 				DEVELOPMENT_TEAM = DDYV9BM2N2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = TaskFlow/Info.plist;
+				INFOPLIST_FILE = TaskFlow/Shared/Resources/Info.plist;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Need location to app perform";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

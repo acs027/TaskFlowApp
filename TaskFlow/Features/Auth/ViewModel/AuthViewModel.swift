@@ -60,9 +60,6 @@ class AuthViewModel {
         confirmationPassword = ""
     }
     
-    func showAlert() {
-        
-    }
     
     private func validateSignupFields() -> Bool {
         guard !email.isEmpty, !password.isEmpty, !confirmationPassword.isEmpty else {
@@ -112,6 +109,17 @@ class AuthViewModel {
     private func isValidEmail(_ email: String) -> Bool {
         let pattern = #"^[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$"#
         return email.range(of: pattern, options: .regularExpression) != nil
+    }
+    
+    func logout() {
+        do {
+            try Auth.auth().signOut()
+            authState = .unauthenticated
+            print("Logout success")
+        } catch {
+            print("Error occured while logout.")
+        }
+        
     }
     
     func signup() {

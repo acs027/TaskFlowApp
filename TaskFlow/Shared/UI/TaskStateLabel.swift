@@ -20,7 +20,7 @@ struct TaskStateLabel: View {
                         .lineLimit(1)
                         .minimumScaleFactor(0.8)
                 }
-            if taskState < currentState || currentState == .completed {
+            if taskState < currentState {
                 RoundedRectangle(cornerRadius: 20).fill(.blue.opacity(0.4)).frame(height: 50)
                 Image(systemName: "checkmark.seal")
                     .foregroundStyle(.yellow)

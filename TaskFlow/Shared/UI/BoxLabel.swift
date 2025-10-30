@@ -12,7 +12,6 @@ struct BoxLabel: View {
     var count: Int? = nil
     var body: some View {
         RoundedRectangle(cornerRadius: 20)
-            .background(.ultraThinMaterial)
             .overlay(alignment: .topLeading) {
                 Text(title)
                     .bold()
@@ -23,5 +22,6 @@ struct BoxLabel: View {
                     Text("\(count)")
                 }
             }
+            .glassEffect(.regular.interactive(), in: RoundedRectangle(cornerRadius: 20))
     }
 }

@@ -9,6 +9,9 @@ import SwiftUI
 
 struct SignupView: View {
     @Environment(AuthViewModel.self) var viewModel
+    @FocusState private var focusedField: Field?
+    
+    enum Field { case email, password, confirmPassword }
     
     var body: some View {
         @Bindable var viewModel = viewModel
@@ -17,10 +20,26 @@ struct SignupView: View {
                 Section("Email") {
                     TextField("Email", text: $viewModel.email)
                         .textInputAutocapitalization(.never)
+                        .keyboardType(.emailAddress)
+                        .submitLabel(.next)
+                        .focused($focusedField, equals: .email)
+                        .onSubmit {
+                            focusedField = .password
+                        }
                 }
                 Section("Pasword") {
                     SecureField("Password", text: $viewModel.password)
+                        .submitLabel(.next)
+                        .focused($focusedField, equals: .password)
+                        .onSubmit {
+                            focusedField = .confirmPassword
+                        }
                     SecureField("Password", text: $viewModel.confirmationPassword)
+                        .submitLabel(.done)
+                        .focused($focusedField, equals: .confirmPassword)
+                        .onSubmit {
+                            signup()
+                        }
                 }
             }
             .frame(height: 300)

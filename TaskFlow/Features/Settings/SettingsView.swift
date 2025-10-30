@@ -7,9 +7,13 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @Environment(UserPreferences.self) var prefs
     @State private var viewModel = SettingsViewModel()
-    @AppStorage("isDarkMode") private var isDarkMode = false
+    @Environment(AuthViewModel.self) var authViewModel
+    @AppStorage("theme") var themeRawValue: String = Theme.system.rawValue
+    @AppStorage("offlineSync") var offlineSyncRawValue: String = OfflineSyncMode.wifiOnly.rawValue
+    @AppStorage("manualSync") var manualSyncRawValue: String = ManualSync.off.rawValue
+    @AppStorage("notificationsEnabled") var notificationsEnabled: Bool = false
+    @AppStorage("userRole") var userRoleRawValue: String = UserRole.technician.rawValue
     
     var body: some View {
         NavigationStack {
@@ -19,26 +23,20 @@ struct SettingsView: View {
                 notificationSection
                 roleSection
                 exportSection
+                logoutSection
             }
             .navigationTitle("Settings")
-            .preferredColorScheme(prefs.theme.colorScheme)
+            .preferredColorScheme(Theme(rawValue: themeRawValue)?.colorScheme)
         }
-        .onChange(of: prefs.notificationsEnabled) { oldValue, newValue in
+        .onChange(of: notificationsEnabled) { oldValue, newValue in
             viewModel.handleNotificationChange(for: newValue)
-        }
-        .onChange(of: prefs) { oldValue, newValue in
-            prefs.save()
         }
     }
     
     private var themeSection: some View {
         Section("Appearance") {
-            let themeBinding = Binding<UserPreferences.Theme>(
-                get: { prefs.theme },
-                set: { prefs.theme = $0 }
-            )
-            Picker("Theme", selection: themeBinding) {
-                ForEach(UserPreferences.Theme.allCases) { theme in
+            Picker("Theme", selection: $themeRawValue) {
+                ForEach(Theme.allCases) { theme in
                     Text(theme.rawValue.capitalized).tag(theme)
                 }
             }
@@ -47,21 +45,13 @@ struct SettingsView: View {
     
     private var syncSection: some View {
         Section("Sync") {
-            let offlineBinding = Binding<UserPreferences.OfflineSyncMode>(
-                get: { prefs.offlineSync },
-                set: { prefs.offlineSync = $0 }
-            )
-            Picker("Offline Sync", selection: offlineBinding) {
-                ForEach(UserPreferences.OfflineSyncMode.allCases) { mode in
+            Picker("Offline Sync", selection: $offlineSyncRawValue) {
+                ForEach(OfflineSyncMode.allCases) { mode in
                     Text(mode.rawValue).tag(mode)
                 }
             }
-            let manualBinding = Binding<UserPreferences.ManualSync>(
-                get: { prefs.manualSync },
-                set: { prefs.manualSync = $0 }
-            )
-            Picker("Manual Sync", selection: manualBinding) {
-                ForEach(UserPreferences.ManualSync.allCases) { sync in
+            Picker("Manual Sync", selection: $manualSyncRawValue) {
+                ForEach(ManualSync.allCases) { sync in
                     Text(sync.rawValue).tag(sync)
                 }
             }
@@ -70,21 +60,13 @@ struct SettingsView: View {
     
     private var notificationSection: some View {
         Section("Notifications") {
-            let notificationsBinding = Binding<Bool>(
-                get: { prefs.notificationsEnabled },
-                set: { prefs.notificationsEnabled = $0 }
-            )
-            Toggle("Enable Notifications", isOn: notificationsBinding)
+            Toggle("Enable Notifications", isOn: $notificationsEnabled)
         }
     }
     
     private var roleSection: some View {
         Section("Role") {
-            let roleBinding = Binding<UserRole>(
-                get: { prefs.userRole },
-                set: { prefs.userRole = $0 }
-            )
-            Picker("User Role", selection: roleBinding) {
+            Picker("User Role", selection: $userRoleRawValue) {
                 ForEach(UserRole.allCases) { role in
                     Text(role.rawValue).tag(role)
                 }
@@ -100,13 +82,20 @@ struct SettingsView: View {
         }
     }
     
+    private var logoutSection: some View {
+        Section("Logout") {
+            Button("Logout") {
+                authViewModel.logout()
+            }
+        }
+    }
 }
 
 #Preview {
     SettingsView()
 }
 
-extension UserPreferences.Theme {
+extension Theme {
     var colorScheme: ColorScheme? {
         switch self {
         case .system:

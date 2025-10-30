@@ -7,7 +7,6 @@
 
 import SwiftUI
 import SwiftData
-import UserNotifications
 
 @main
 struct TaskFlowApp: App {
@@ -35,7 +34,6 @@ struct TaskFlowApp: App {
     var body: some Scene {
         WindowGroup {
             AuthView()
-                .environment(UserPreferences.shared)
         }
         .modelContainer(sharedModelContainer)
     }

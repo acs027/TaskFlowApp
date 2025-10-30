@@ -47,6 +47,7 @@ struct AuthView: View {
                 ProgressView()
             case .authenticated:
                 TaskFlowTabBar()
+                    .environment(viewModel)
             }
         }
         .onChange(of: viewModel.authState) { oldValue, newValue in

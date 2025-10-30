@@ -10,6 +10,15 @@
     "%lld" : {
 
     },
+    "📍 Latitude: %lf" : {
+
+    },
+    "📍 Longitude: %lf" : {
+
+    },
+    "📬 %@" : {
+
+    },
     "Add" : {
 
     },
@@ -38,6 +47,9 @@
 
     },
     "Assigned person/team*" : {
+
+    },
+    "Assigned to :" : {
 
     },
     "Assigned unit/person : " : {
@@ -71,6 +83,9 @@
 
     },
     "Deadline" : {
+
+    },
+    "Deadline :" : {
 
     },
     "Deadline*" : {
@@ -121,19 +136,28 @@
     "Latitude :" : {
 
     },
+    "Latitude: %.5f" : {
+
+    },
     "Location" : {
 
     },
     "Location not available" : {
 
     },
+    "Location*" : {
+
+    },
+    "Logout" : {
+
+    },
     "Longitude :" : {
 
     },
-    "Manual Sync" : {
+    "Longitude: %.5f" : {
 
     },
-    "marker" : {
+    "Manual Sync" : {
 
     },
     "My Location" : {
@@ -190,6 +214,12 @@
     "Save" : {
 
     },
+    "Search" : {
+
+    },
+    "Search for a place..." : {
+
+    },
     "Select Location" : {
 
     },
@@ -215,6 +245,9 @@
 
     },
     "Sign up with Google" : {
+
+    },
+    "Signature" : {
 
     },
     "Summary" : {
@@ -244,10 +277,16 @@
     "Theme" : {
 
     },
+    "Title :" : {
+
+    },
     "Title*" : {
 
     },
     "To do" : {
+
+    },
+    "Use My Location" : {
 
     },
     "User Role" : {

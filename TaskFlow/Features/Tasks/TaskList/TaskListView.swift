@@ -10,7 +10,7 @@ import SwiftData
 
 struct TaskListView: View {
     @Environment(\.modelContext) var context
-    @Environment(UserPreferences.self) var prefs
+    @AppStorage("userRole") var userRoleRawValue: String = UserRole.technician.rawValue
     @State var viewModel: ViewModel
     @State var isCreating: Bool = false
     @Namespace var transition
@@ -27,11 +27,24 @@ struct TaskListView: View {
                 ForEach(viewModel.tasks, id:\.id) { task in
                     NavigationLink(destination: TaskDetailView(task: task, context: context)) {
                         HStack {
-                            Text(task.title)
+                            VStack {
+                                Text("Title :")
+                                    .font(.caption)
+                                Text(task.title)
+                            }
                             Spacer()
-                            Text(task.assignedUnit)
+                            VStack {
+                                Text("Assigned to :")
+                                    .font(.caption)
+                                Text(task.assignedUnit)
+                            }
                             Spacer()
-                            Text(task.deadline, style: .relative)
+                            VStack {
+                                Text("Deadline :")
+                                    .font(.caption)
+                                Text(task.deadline, style: .relative)
+                            }
+                            
                         }
                     }
                     .listRowBackground(Color.backgroundColor(for: task))
@@ -40,7 +53,7 @@ struct TaskListView: View {
             .navigationTitle("Task List")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    if prefs.userRole == .admin {
+                    if userRoleRawValue == UserRole.admin.rawValue {
                         Button("Add a task", systemImage: "plus") {
                             isCreating.toggle()
                         }

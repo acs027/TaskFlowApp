@@ -50,17 +50,15 @@ struct OngoingContentView: View {
         .navigationTitle("Ongoing Details")
         .sheet(isPresented: $isEditingText) {
             VStack {
+                SheetControlButtons(buttonTitle: "Add") {
+                   addTapped()
+                }
                 TextEditor(text: $textContent)
                         .border(.secondary)
                         .padding()
                         .padding()
                 .navigationTitle("Editing todo")
                 Spacer()
-                Button("Add") {
-                    let item = WorkItem(text: textContent, mediaType: .text)
-                    taskItem.inProgressContent.append(item)
-                    isEditingText.toggle()
-                }
             }
         }
     }
@@ -116,13 +114,21 @@ struct OngoingContentView: View {
                     .modifier(GlassMediaButton(isItemsExpanded: isItemsExpanded, offset: offset, degree: 90, duration: 0.8))
             }
     }
+    
+    private func addTapped() {
+        let item = WorkItem(text: textContent, mediaType: .text)
+        taskItem.inProgressContent.append(item)
+        isEditingText.toggle()
+    }
 }
 
 
 
 #Preview {
     NavigationStack{
-        OngoingContentView(taskItem: TaskItem.mock)
+        if let taskItem =  TaskItem.mockData.randomElement() {
+            OngoingContentView(taskItem: taskItem)
+        }
     }
 }
 

@@ -14,6 +14,8 @@ class LocationManager: NSObject, ObservableObject {
     
     @Published var userLocation: CLLocationCoordinate2D?
     
+    @Published var isServiceActive: Bool = false
+    
     @Published var authorizationStatus: CLAuthorizationStatus = .notDetermined
     
     override init() {
@@ -27,10 +29,13 @@ class LocationManager: NSObject, ObservableObject {
     }
     
     func startUpdating() {
+        isServiceActive = true
         manager.startUpdatingLocation()
+        
     }
     
     func stopUpdating() {
+        isServiceActive = false
         manager.stopUpdatingLocation()
     }
     
@@ -43,10 +48,6 @@ class LocationManager: NSObject, ObservableObject {
         case .authorizedWhenInUse: "When in use"
         @unknown default: "Unknown"
         }
-    }
-    
-    func isServiceEnabled() -> Bool {
-        return CLLocationManager.locationServicesEnabled()
     }
 }
 

@@ -10,11 +10,11 @@ import SwiftData
 import AVKit
 
 struct TaskDetailView: View {
-    @Environment(UserPreferences.self) var prefs
     @State var viewModel: ViewModel
     @State var isEditingTodo: Bool = false
     @State var isEditingReview: Bool = false
     @State var isEditingOngoingContent: Bool = false
+    @AppStorage("userRole") var userRoleRawValue: String = UserRole.technician.rawValue
     
     init(task: TaskItem, context: ModelContext) {
         self.viewModel = ViewModel(task: task, context: context)
@@ -26,11 +26,7 @@ struct TaskDetailView: View {
             todoSection
             ongoingSection
             reviewSection
-            Section {
-                Text(TaskState.completed.rawValue)
-                    .bold()
-                    .frame(height: 50)
-            }
+            completedSection
         }
         .safeAreaInset(edge: .bottom, content: {
             changeStatusSavePDFButtons
@@ -50,7 +46,7 @@ struct TaskDetailView: View {
     private var taskState: some View {
         HStack {
             ForEach(TaskState.allCases, id:\.id) { state in
-                if state != .initial {
+                if state != .initial && state != .completed {
                     TaskStateLabel(taskState: state, currentState: viewModel.task.taskState)
                 }
             }
@@ -66,7 +62,7 @@ struct TaskDetailView: View {
                     .bold()
                     .frame(height: 20)
                 Spacer()
-                if prefs.userRole == .admin {
+                if userRoleRawValue == UserRole.admin.rawValue {
                     Button("Edit") {
                         isEditingTodo.toggle()
                     }
@@ -147,7 +143,7 @@ struct TaskDetailView: View {
                     .bold()
                     .frame(height: 20)
                 Spacer()
-                if prefs.userRole == .admin {
+                if userRoleRawValue == UserRole.admin.rawValue {
                     Button("Edit") {
                         isEditingReview.toggle()
                     }
@@ -162,6 +158,16 @@ struct TaskDetailView: View {
             }
             
         }
+    }
+    
+    @ViewBuilder
+    private var completedSection: some View {
+            Section {
+                Text(TaskState.completed.rawValue)
+                    .bold()
+                    .frame(height: 50)
+            }
+            .opacity(viewModel.task.taskState == .completed ? 1 : 0)
     }
     
     private func changeStatus() {

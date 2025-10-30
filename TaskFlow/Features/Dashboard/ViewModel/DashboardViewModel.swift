@@ -19,9 +19,10 @@ extension DashboardView {
         init(context: ModelContext) {
             self.context = context
             self.syncManager = TaskSyncManager(context: context)
+            fetchTaskCounts()
         }
         
-        func fetchTaskCounts(context: ModelContext) {
+        func fetchTaskCounts() {
             do {
                 // Fetch all tasks (single database call)
                 let descriptor = FetchDescriptor<TaskItem>()
@@ -43,7 +44,7 @@ extension DashboardView {
             counts[state] ?? 0
         }
         
-        private func sync() async {
+        func sync() async {
             await syncManager.syncFirebaseToLocal()
             await syncManager.syncLocalToFirebase()
         }

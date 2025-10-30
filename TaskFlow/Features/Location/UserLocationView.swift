@@ -10,6 +10,7 @@ import CoreLocation
 
 struct UserLocationView: View {
     @State var viewModel = UserLocationViewModel()
+    
     var body: some View {
         NavigationStack {
             Form {
@@ -43,7 +44,7 @@ struct UserLocationView: View {
                         Text("Service : ")
                             .bold()
                         Spacer()
-                        Text(viewModel.locationManager.isServiceEnabled() ? "On" : "Off")
+                        Text(viewModel.locationManager.isServiceActive ? "On" : "Off")
                     }
                     
                 }

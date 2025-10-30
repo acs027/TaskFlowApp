@@ -6,17 +6,25 @@
 //
 
 import Foundation
-
+import FirebaseAuth
 
 @Observable
 class SettingsViewModel {
-    
-    //TODO notification change
     func handleNotificationChange(for value: Bool) {
         if value {
             NotificationManager.requestPermission()
         } else {
             NotificationManager.clearAllNotifications()
         }
+    }
+    
+    func logout() {
+        do {
+            try Auth.auth().signOut()
+            print("Logout success")
+        } catch {
+            print("Error occured while logout.")
+        }
+        
     }
 }
