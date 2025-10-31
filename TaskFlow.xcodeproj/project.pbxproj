@@ -10,6 +10,7 @@
 		0842E9BE2EA9C413003BA992 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 0842E9BD2EA9C413003BA992 /* FirebaseFirestore */; };
 		0867538C2EACABEA0038D306 /* Storage in Frameworks */ = {isa = PBXBuildFile; productRef = 0867538B2EACABEA0038D306 /* Storage */; };
 		086753902EACACB30038D306 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 0867538F2EACACB30038D306 /* Supabase */; };
+		086755942EB4A0A30038D306 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 086755932EB4A0A20038D306 /* README.md */; };
 		089712F92EA5B5B0003AE524 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 089712F82EA5B5B0003AE524 /* Localizable.xcstrings */; };
 		0897137C2EA89682003AE524 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 0897137B2EA89682003AE524 /* FirebaseAuth */; };
 		0897138D2EA977E0003AE524 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 0897138C2EA977E0003AE524 /* GoogleSignIn */; };
@@ -17,6 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		086755932EB4A0A20038D306 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		089712CE2EA497DF003AE524 /* TaskFlow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TaskFlow.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		089712F82EA5B5B0003AE524 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -62,6 +64,7 @@
 		089712C52EA497DF003AE524 = {
 			isa = PBXGroup;
 			children = (
+				086755932EB4A0A20038D306 /* README.md */,
 				089712F82EA5B5B0003AE524 /* Localizable.xcstrings */,
 				089712D02EA497DF003AE524 /* TaskFlow */,
 				089712CF2EA497DF003AE524 /* Products */,
@@ -153,6 +156,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				089712F92EA5B5B0003AE524 /* Localizable.xcstrings in Resources */,
+				086755942EB4A0A30038D306 /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
