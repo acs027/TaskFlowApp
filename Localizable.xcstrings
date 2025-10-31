@@ -46,6 +46,9 @@
     "Appearance" : {
 
     },
+    "Are you sure about to deleting this Task" : {
+
+    },
     "Assigned person/team*" : {
 
     },
@@ -58,7 +61,7 @@
     "Authentication Error" : {
 
     },
-    "Category" : {
+    "Cancel" : {
 
     },
     "Change Status -> %@" : {
@@ -68,9 +71,6 @@
 
     },
     "Completed" : {
-
-    },
-    "Control List" : {
 
     },
     "Create a Task" : {
@@ -136,7 +136,13 @@
     "Export PDF" : {
 
     },
+    "Fullscreen" : {
+
+    },
     "Generate PDF" : {
+
+    },
+    "Insert Mock Data" : {
 
     },
     "Latitude :" : {
@@ -256,9 +262,6 @@
     "Signature" : {
 
     },
-    "Summary" : {
-
-    },
     "Sync" : {
 
     },
@@ -269,6 +272,9 @@
 
     },
     "Task List" : {
+
+    },
+    "Task media, notes" : {
 
     },
     "Tasks" : {
@@ -293,9 +299,6 @@
 
     },
     "User Role" : {
-
-    },
-    "Video attached: %@" : {
 
     }
   },

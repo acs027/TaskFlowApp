@@ -35,5 +35,21 @@ extension TaskListView {
                      print("Fetch failed")
                  }
              }
+        
+        func insertMockData() {
+            for item in TaskItem.mockData {
+                context.insert(item)
+            }
+            do {
+                try context.save()
+            } catch {
+                print("Inserting mock data failed.")
+            }
+        }
+        
+        func deleteTask(task: TaskItem) {
+            context.delete(task)
+            fetchData()
+        }
     }
 }

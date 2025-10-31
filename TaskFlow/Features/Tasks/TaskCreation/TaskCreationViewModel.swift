@@ -34,8 +34,6 @@ extension TaskCreationView {
             self.context = context
         }
         
-        //TODO: I will figure out how we get checklist while task creation
-        //TextEditor Checklist section, cast them CheckListItem with new line seperator
         func saveTask(isNotificationOn: Bool, completion: @escaping () -> Void) {
                 if isValid() {
                     do {

@@ -33,7 +33,7 @@ struct DashboardView: View {
                     SyncLoadingView()
                 }
             }
-            .navigationTitle("Summary")
+            .navigationTitle("Dashboard")
             .toolbar {
                 if manualSyncRawValue == "On", let viewModel {
                     ToolbarItem {
@@ -80,7 +80,7 @@ struct DashboardView: View {
                 HStack {
                     BoxLabel(title: "Waiting", count: viewModel.count(for: .planned))
                     BoxLabel(title: "Ongoing", count: viewModel.count(for: .ongoing))
-                    BoxLabel(title: "Complete", count: viewModel.count(for: .completed))
+                    BoxLabel(title: "Completed", count: viewModel.count(for: .completed))
                 }
                 .frame(height: 100)
                 .padding(.horizontal)

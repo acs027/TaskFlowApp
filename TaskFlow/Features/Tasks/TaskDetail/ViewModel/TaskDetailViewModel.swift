@@ -17,6 +17,9 @@ extension TaskDetailView {
         var errorMessage: String?
         let supabaseManager = SupabaseManager.shared
         
+        var fullscreenImageURL: URL?
+        var fullscreenVideoURL: URL?
+        
         init(task: TaskItem, context: ModelContext) {
             self.task = task
             self.context = context
@@ -54,6 +57,7 @@ extension TaskDetailView {
         
         func changeStatus() {
             if task.taskState == .review, !isCheckListDone() {
+                errorMessage = "Checklist must be completed to proceed."
                 return
             }
             self.task.taskState = self.task.taskState.nextStep
@@ -71,7 +75,7 @@ extension TaskDetailView {
         }
         
         func isChecklistToggleDisabled() -> Bool {
-            task.taskState > .review
+            task.taskState != .review
         }
     }
 }

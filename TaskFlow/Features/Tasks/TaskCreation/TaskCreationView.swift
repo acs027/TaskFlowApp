@@ -93,8 +93,8 @@ struct TaskCreationView: View {
                 }
             }
             .pickerStyle(.segmented)
-            TextField("Category", text: $viewModel.category)
-            TextField("Control List", text: $viewModel.checkList)
+//            TextField("Category", text: $viewModel.category)
+//            TextField("Control List", text: $viewModel.checkList)
             TextField("Description", text: $viewModel.description)
         }
     }

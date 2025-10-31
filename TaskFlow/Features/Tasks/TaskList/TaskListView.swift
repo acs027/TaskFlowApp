@@ -20,26 +20,30 @@ struct TaskListView: View {
         _viewModel = State(initialValue: viewModel)
     }
     
-    //TODO: SLA Notification
     var body: some View {
         NavigationStack {
             List {
                 ForEach(viewModel.remainingTasks, id:\.id) { task in
-                    NavigationLink(destination: TaskDetailView(task: task, context: context)) {
+                    NavigationLink(destination: TaskDetailView(task: task, context: context) {
+                        viewModel.deleteTask(task: task)
+                    }) {
                        TaskRowLabel(task: task)
                     }
-                    .listRowBackground(Color.backgroundColor(for: task))
+                    .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
                 }
                 
                 Section("Completed") {
                     ForEach(viewModel.completedTasks, id:\.id) { task in
-                        NavigationLink(destination: TaskDetailView(task: task, context: context)) {
+                        NavigationLink(destination: TaskDetailView(task: task, context: context) {
+                            viewModel.deleteTask(task: task)
+                        }) {
                            TaskRowLabel(task: task)
                         }
-                        .listRowBackground(Color.green)
+                        .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
                     }
                 }
             }
+            .listStyle(.plain)
             .navigationTitle("Task List")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
@@ -48,6 +52,14 @@ struct TaskListView: View {
                             isCreating.toggle()
                         }
                         .matchedTransitionSource(id: "sheet", in: transition)
+                    }
+                }
+                
+                if userRoleRawValue == UserRole.developer.rawValue {
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button("Insert Mock Data", systemImage: "plus") {
+                            viewModel.insertMockData()
+                        }
                     }
                 }
             }

@@ -44,13 +44,19 @@ extension DashboardView {
         }
         
         func count(for state: TaskState) -> Int {
-            counts[state] ?? 0
+            if state == .planned {
+                return (counts[state] ?? 0) + (counts[.todo] ?? 0)
+            } else if state == .ongoing {
+                return (counts[state] ?? 0) + (counts[.review] ?? 0)
+            }
+            return counts[state] ?? 0
         }
         
         func sync() async {
             isSyncing = true
             await syncManager.syncFirebaseToLocal()
             await syncManager.syncLocalToFirebase()
+            fetchTaskCounts()
             isSyncing = false
         }
         

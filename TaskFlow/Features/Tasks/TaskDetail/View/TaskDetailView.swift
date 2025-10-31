@@ -10,14 +10,19 @@ import SwiftData
 import AVKit
 
 struct TaskDetailView: View {
+    @Environment(\.dismiss) var dismiss
     @State var viewModel: ViewModel
     @State var isEditingTodo: Bool = false
     @State var isEditingReview: Bool = false
     @State var isEditingOngoingContent: Bool = false
+    @State var isDeletingTask: Bool = false
     @AppStorage("userRole") var userRoleRawValue: String = UserRole.technician.rawValue
     
-    init(task: TaskItem, context: ModelContext) {
+    let onDelete: () -> Void
+    
+    init(task: TaskItem, context: ModelContext, onDelete: @escaping () -> Void) {
         self.viewModel = ViewModel(task: task, context: context)
+        self.onDelete = onDelete
     }
     
     var body: some View {
@@ -41,6 +46,60 @@ struct TaskDetailView: View {
             TodoEditView(viewModel: $viewModel)
         }
         .navigationTitle(viewModel.task.title)
+        .alert(viewModel.errorMessage ?? "Error", isPresented: Binding(get: {
+            viewModel.errorMessage != nil
+        }, set: { _ in
+            viewModel.errorMessage = nil
+        })) {
+            Text("OK")
+        }
+        .fullScreenCover(isPresented: Binding(get: {
+            viewModel.fullscreenImageURL != nil
+        }, set: { _ in
+            viewModel.fullscreenImageURL = nil
+        }), content: {
+            ZStack {
+                Color.black.ignoresSafeArea()
+                AsyncImage(url: viewModel.fullscreenImageURL) { image in
+                    image
+                        .resizable()
+                        .scaledToFit()
+                        .onTapGesture { viewModel.fullscreenImageURL = nil }
+                } placeholder: {
+                    ProgressView().tint(.white)
+                }
+            }
+        })
+        .fullScreenCover(isPresented: Binding(get: {
+            viewModel.fullscreenVideoURL != nil
+        }, set: { _ in
+            viewModel.fullscreenVideoURL = nil
+        }), content: {
+            if let url = viewModel.fullscreenVideoURL {
+                VStack {
+                    SheetControlButtons()
+                    VideoPlayerView(player: AVPlayer(url: url), isFullscreen: true)
+                }
+            }
+        })
+        .toolbar {
+            if userRoleRawValue == UserRole.admin.rawValue {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Delete", role: .destructive) {
+                        isDeletingTask.toggle()
+                    }
+                }
+            }
+        }
+        .alert("Are you sure about to deleting this Task", isPresented: $isDeletingTask) {
+            Button("OK", role: .destructive) {
+                onDelete()
+                dismiss()
+            }
+            Button("Cancel", role: .cancel) {
+                
+            }
+        }
     }
     
     private var taskState: some View {
@@ -104,33 +163,52 @@ struct TaskDetailView: View {
                         .bold()
                         .frame(height: 20)
                     Spacer()
-                    Button("Edit") {
-                        isEditingOngoingContent.toggle()
-                    }
+                    Text("Edit")
+                        .foregroundStyle(.blue)
+                }
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    isEditingOngoingContent.toggle()
                 }
                 Divider()
-                ForEach(viewModel.task.inProgressContent, id:\.id) { media in
-                    switch media.mediaType {
-                    case .image:
-                        AsyncImage(url: media.mediaURL) { image in
-                            image.resizable()
-                                .frame(width: 50, height: 50)
-                        } placeholder: {
-                            Color.blue
-                                .frame(width: 50, height: 50)
-                        }
-                       
-                    case .text:
-                        Text(media.text ?? "")
-                    case .video:
-                        VStack {
-                            if let url = media.mediaURL {
-                                VideoPlayerView(player: AVPlayer(url: url))
-                                Label("Video attached: \(media.mediaURL?.lastPathComponent ?? "")", systemImage: "video.fill")
+                if !viewModel.task.inProgressContent.isEmpty {
+                    ForEach(viewModel.task.inProgressContent, id:\.id) { media in
+                        switch media.mediaType {
+                        case .image:
+                            AsyncImage(url: media.mediaURL) { image in
+                                image.resizable()
+                                    .aspectRatio(16/9, contentMode: .fit)
+                                    .onTapGesture {
+                                        viewModel.fullscreenImageURL = media.mediaURL
+                                    }
+                            } placeholder: {
+                                Color.blue
+                                    .aspectRatio(16/9, contentMode: .fit)
                             }
+                           
+                        case .text:
+                            Text(media.text ?? "")
+                        case .video:
+                            VStack {
+                                if let url = media.mediaURL {
+                                    Button("Fullscreen", role: .confirm) {
+                                            viewModel.fullscreenVideoURL = url
+                                        
+                                    }
+                                    VideoPlayerView(player: AVPlayer(url: url))
+                                }
+                            }
+                            .background(
+                                RoundedRectangle(cornerRadius: 20)
+                                    .fill(.ultraThinMaterial)
+                            )
+                            
                         }
-                        
                     }
+                } else {
+                    Text("Task media, notes")
+                        .font(.caption)
+                        .opacity(0.5)
                 }
             }
         }
@@ -188,7 +266,9 @@ struct TaskDetailView: View {
     
     return TabView {
         NavigationStack {
-            TaskDetailView(task: mockTask, context: container.mainContext)
+            TaskDetailView(task: mockTask, context: container.mainContext) {
+                
+            }
         }
     }
     .modelContainer(container)

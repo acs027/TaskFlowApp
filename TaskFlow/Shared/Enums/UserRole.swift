@@ -9,5 +9,6 @@
 enum UserRole: String, CaseIterable, Identifiable {
     case admin = "Admin"
     case technician = "Technician"
+    case developer = "Developer"
     var id: String { rawValue }
 }

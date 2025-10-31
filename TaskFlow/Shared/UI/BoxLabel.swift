@@ -16,6 +16,8 @@ struct BoxLabel: View {
                 Text(title)
                     .bold()
                     .padding()
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
             }
             .overlay(alignment: .center) {
                 if let count {

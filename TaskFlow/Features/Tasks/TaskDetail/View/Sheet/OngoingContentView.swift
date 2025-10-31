@@ -28,12 +28,12 @@ struct OngoingContentView: View {
                             AsyncImage(url: media.mediaURL) { image in
                                 image
                                     .resizable()
-                                    .scaledToFit()
-                                    .frame(height: 50)
+                                    .aspectRatio(16/9, contentMode: .fit)
+                                    
                                     
                             } placeholder: {
                                 Color.clear
-                                    .frame(height: 50)
+                                    .aspectRatio(16/9, contentMode: .fit)
                             }
                         case .text:
                             Text(media.text ?? "")

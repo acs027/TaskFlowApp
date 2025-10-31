@@ -32,6 +32,21 @@ enum TaskState: String, Codable, CaseIterable, Identifiable, Comparable {
         }
     }
     
+    var color: Color {
+        switch self {
+        case .planned:
+                .cyan
+        case .todo:
+                .teal
+        case .ongoing:
+                .cyan
+        case .review:
+                .indigo
+        case .completed:
+                .green
+        }
+    }
+    
     static func < (lhs: TaskState, rhs: TaskState) -> Bool {
          let order: [TaskState] = [.planned, .todo, .ongoing, .review, .completed]
          return order.firstIndex(of: lhs)! < order.firstIndex(of: rhs)!

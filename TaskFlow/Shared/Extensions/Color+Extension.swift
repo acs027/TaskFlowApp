@@ -19,7 +19,7 @@ extension Color {
         } else if timeInterval < 3 * 24 * 60 * 60 { // within 3 days
             return Color.orange.opacity(0.3)
         } else {
-            return Color.clear
+            return Color.gray.opacity(0.3)
         }
     }
 }
