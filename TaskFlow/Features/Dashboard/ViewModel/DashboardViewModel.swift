@@ -54,8 +54,8 @@ extension DashboardView {
         
         func sync() async {
             isSyncing = true
-            await syncManager.syncFirebaseToLocal()
             await syncManager.syncLocalToFirebase()
+            await syncManager.syncFirebaseToLocal()
             fetchTaskCounts()
             isSyncing = false
         }

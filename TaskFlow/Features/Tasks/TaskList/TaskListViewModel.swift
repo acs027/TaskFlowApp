@@ -49,6 +49,8 @@ extension TaskListView {
         
         func deleteTask(task: TaskItem) {
             context.delete(task)
+            let deletedTask = DeletedTask(id: task.id)
+            context.insert(deletedTask)
             fetchData()
         }
     }

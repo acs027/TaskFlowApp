@@ -20,11 +20,25 @@ final class TaskSyncManager {
     
     func syncLocalToFirebase() async {
         let fetchDescriptor = FetchDescriptor<TaskItem>()
-        guard let tasks = try? context.fetch(fetchDescriptor) else { return }
-        
-        for task in tasks {
-            await uploadTaskIfNeeded(task)
+        if let tasks = try? context.fetch(fetchDescriptor) {
+            for task in tasks {
+                await uploadTaskIfNeeded(task)
+            }
         }
+        
+        let deletedTaskFetchDescriptor = FetchDescriptor<DeletedTask>()
+        if let deletedTaskIds = try? context.fetch(deletedTaskFetchDescriptor) {
+            for deletedTask in deletedTaskIds {
+                let id = deletedTask.id
+                await deleteTaskIfNeeded(id: id)
+            }
+        }
+    }
+    
+    private func deleteTaskIfNeeded(id: UUID) async {
+        let docRef = db.collection("tasks").document(id.uuidString)
+        
+        try? await docRef.delete()
     }
     
     private func uploadTaskIfNeeded(_ task: TaskItem) async {
